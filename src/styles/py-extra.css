@@ -182,6 +182,264 @@
   flex-shrink: 0;
 }
 
+/* Card slider block (e.g. "Producten & Diensten") */
+.py-scope .py-slider {
+  position: relative;
+  margin-top: 24px;
+}
+.py-scope .py-slider__track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.py-scope .py-slider__track::-webkit-scrollbar {
+  display: none;
+}
+.py-scope .py-slider__card {
+  flex: 0 0 calc((100% - (2 * 24px)) / 3);
+  scroll-snap-align: start;
+  background: white;
+  border: 1px solid var(--py-line);
+  border-radius: var(--py-radius);
+  overflow: hidden;
+}
+.py-scope .py-slider__image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.py-scope .py-slider__body {
+  padding: 20px 22px 24px;
+}
+.py-scope .py-slider__body h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: var(--py-text);
+}
+.py-scope .py-slider__body p {
+  margin: 0;
+  color: var(--py-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.py-scope .py-slider__arrow {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  box-shadow: 0 2px 8px rgba(13, 20, 46, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--py-blue);
+  z-index: 2;
+  transition: background 0.15s ease;
+}
+.py-scope .py-slider__arrow:hover {
+  background: var(--py-paper);
+}
+.py-scope .py-slider__arrow--prev {
+  left: -22px;
+}
+.py-scope .py-slider__arrow--next {
+  right: -22px;
+}
+.py-scope .py-slider__arrow-icon--prev {
+  transform: rotate(180deg);
+}
+@media (max-width: 900px) {
+  .py-scope .py-slider__card {
+    flex: 0 0 calc((100% - 24px) / 2);
+  }
+}
+@media (max-width: 600px) {
+  .py-scope .py-slider__card {
+    flex: 0 0 85%;
+  }
+  .py-scope .py-slider__arrow--prev {
+    left: 4px;
+  }
+  .py-scope .py-slider__arrow--next {
+    right: 4px;
+  }
+}
+
+/* Stappenplan block ("zo werkt het") */
+.py-scope .py-steps {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.py-scope .py-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.py-scope .py-step__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--py-blue);
+  color: white;
+  font-weight: 700;
+}
+.py-scope .py-step__body strong {
+  display: block;
+}
+.py-scope .py-step__body p {
+  margin-top: 4px;
+  color: var(--py-muted);
+}
+
+/* Cijfers-rij block (kengetallen) */
+.py-scope .py-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 24px;
+}
+.py-scope .py-stat {
+  padding-left: 24px;
+  border-left: 1px solid var(--py-line);
+}
+.py-scope .py-stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+.py-scope .py-stat strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--py-blue);
+}
+.py-scope .py-stat span {
+  display: block;
+  margin-top: 4px;
+  color: var(--py-muted);
+  font-size: 0.9rem;
+}
+
+/* Doelgroepen block (segmented audiences) */
+.py-scope .py-doelgroepen {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 24px;
+}
+.py-scope .py-doelgroep {
+  border: 1px solid var(--py-line);
+  border-radius: var(--py-radius);
+  padding: 28px;
+}
+.py-scope .py-doelgroep__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--py-paper);
+  color: var(--py-blue);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.py-scope .py-doelgroep h3 {
+  margin: 0 0 8px;
+}
+.py-scope .py-doelgroep__punten {
+  list-style: none;
+  margin: 16px 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.py-scope .py-doelgroep__punten li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--py-muted);
+}
+.py-scope .py-doelgroep__punten svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--py-blue);
+}
+
+/* App-promotie block */
+.py-scope .py-app-promo {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  margin-top: 24px;
+}
+.py-scope .py-app-promo__features {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.py-scope .py-app-promo__features li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.py-scope .py-app-promo__features strong {
+  display: block;
+}
+.py-scope .py-app-promo__features p {
+  margin-top: 4px;
+  color: var(--py-muted);
+}
+.py-scope .py-app-promo__feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--py-paper);
+  color: var(--py-blue);
+}
+.py-scope .py-app-promo__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.py-scope .py-app-promo__image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--py-radius);
+}
+@media (max-width: 760px) {
+  .py-scope .py-app-promo {
+    grid-template-columns: 1fr;
+  }
+  .py-scope .py-app-promo__image {
+    order: -1;
+  }
+}
+
 /* Stacked info sections that replace the prototype's tab widget */
 .py-scope .py-info-section {
   padding: 40px 0;
