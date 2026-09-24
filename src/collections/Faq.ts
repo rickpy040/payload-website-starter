@@ -1,7 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated } from '../access/authenticated'
+
 export const Faq: CollectionConfig = {
   slug: 'faq',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: () => true,
+    update: authenticated,
+  },
   admin: { useAsTitle: 'question' },
   fields: [
     { name: 'question', type: 'text', required: true },

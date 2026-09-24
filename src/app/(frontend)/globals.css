@@ -44,7 +44,7 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-ubuntu);
 }
 
 @layer utilities {
@@ -87,20 +87,33 @@
 }
 
 :root {
+  /* parkingyou brand — Huisstijlhandboek v1.0 */
+  --py-blauw: #1a3580;
+  --py-blauw-ink: #14285f;
+  --py-aqua: #32b9cd;
+  --py-oranje: #f08300;
+  --py-oranje-hi: #ff9412;
+  --py-grijs: #aeaeae;
+  --py-aqua-soft: #eaf7fa;
+  --py-blauw-soft: #eff2f9;
+  --py-paper: #f7f7f8;
+  --py-line: #e8e9ed;
+  --py-grijs-txt: #6b7280;
+
   --background: oklch(100% 0 0deg);
   --foreground: oklch(14.5% 0 0deg);
   --card: oklch(96.5% 0.005 265deg);
   --card-foreground: oklch(14.5% 0 0deg);
   --popover: oklch(100% 0 0deg);
   --popover-foreground: oklch(14.5% 0 0deg);
-  --primary: oklch(20.5% 0 0deg);
+  --primary: var(--py-blauw);
   --primary-foreground: oklch(98.5% 0 0deg);
   --secondary: oklch(97% 0 0deg);
   --secondary-foreground: oklch(20.5% 0 0deg);
   --muted: oklch(97% 0 0deg);
   --muted-foreground: oklch(55.6% 0 0deg);
-  --accent: oklch(97% 0 0deg);
-  --accent-foreground: oklch(20.5% 0 0deg);
+  --accent: var(--py-aqua-soft);
+  --accent-foreground: var(--py-blauw);
   --destructive: oklch(57.7% 0.245 27.325deg);
   --destructive-foreground: oklch(57.7% 0.245 27.325deg);
   --border: oklch(92.2% 0 0deg);
@@ -203,6 +216,18 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
+  --color-py-blauw: var(--py-blauw);
+  --color-py-blauw-ink: var(--py-blauw-ink);
+  --color-py-aqua: var(--py-aqua);
+  --color-py-oranje: var(--py-oranje);
+  --color-py-oranje-hi: var(--py-oranje-hi);
+  --color-py-grijs: var(--py-grijs);
+  --color-py-aqua-soft: var(--py-aqua-soft);
+  --color-py-blauw-soft: var(--py-blauw-soft);
+  --color-py-paper: var(--py-paper);
+  --color-py-line: var(--py-line);
+  --color-py-grijs-txt: var(--py-grijs-txt);
 }
 
 @layer base {

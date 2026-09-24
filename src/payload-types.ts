@@ -816,6 +816,30 @@ export interface Location {
    * Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)
    */
   aeroparkerProductId: string;
+  /**
+   * Vanafprijs per uur in euro, getoond als fallback zolang er geen live Aeroparker-tarief is opgehaald
+   */
+  pricePerHour: number;
+  /**
+   * Gemiddelde beoordeling, bv. 4.6
+   */
+  rating?: number | null;
+  /**
+   * Bv. "24/7 geopend" of "06:00 – 01:00"
+   */
+  openingHours?: string | null;
+  /**
+   * Maximale inrijhoogte, bv. "2,10 m"
+   */
+  maxHeight?: string | null;
+  /**
+   * Totaal aantal plekken op deze locatie
+   */
+  spotsTotal?: number | null;
+  /**
+   * Handmatig bij te werken vrije plekken, zolang er geen live feed is. Bepaalt de beschikbaarheidsstatus (ruim/beperkt/vol).
+   */
+  spotsFree?: number | null;
   description?: {
     root: {
       type: string;
@@ -1512,6 +1536,12 @@ export interface LocationsSelect<T extends boolean = true> {
       };
   coordinates?: T;
   aeroparkerProductId?: T;
+  pricePerHour?: T;
+  rating?: T;
+  openingHours?: T;
+  maxHeight?: T;
+  spotsTotal?: T;
+  spotsFree?: T;
   description?: T;
   images?:
     | T

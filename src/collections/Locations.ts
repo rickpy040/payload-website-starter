@@ -1,7 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated } from '../access/authenticated'
+import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
+
 export const Locations: CollectionConfig = {
   slug: 'locations',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: authenticatedOrPublished,
+    update: authenticated,
+  },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'city', 'aeroparkerProductId', '_status'],
@@ -47,6 +56,41 @@ export const Locations: CollectionConfig = {
       type: 'text',
       required: true,
       admin: { description: 'Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)' },
+    },
+    {
+      name: 'pricePerHour',
+      type: 'number',
+      required: true,
+      admin: { description: 'Vanafprijs per uur in euro, getoond als fallback zolang er geen live Aeroparker-tarief is opgehaald' },
+    },
+    {
+      name: 'rating',
+      type: 'number',
+      min: 0,
+      max: 5,
+      admin: { description: 'Gemiddelde beoordeling, bv. 4.6' },
+    },
+    {
+      name: 'openingHours',
+      type: 'text',
+      admin: { description: 'Bv. "24/7 geopend" of "06:00 – 01:00"' },
+    },
+    {
+      name: 'maxHeight',
+      type: 'text',
+      admin: { description: 'Maximale inrijhoogte, bv. "2,10 m"' },
+    },
+    {
+      name: 'spotsTotal',
+      type: 'number',
+      min: 0,
+      admin: { description: 'Totaal aantal plekken op deze locatie' },
+    },
+    {
+      name: 'spotsFree',
+      type: 'number',
+      min: 0,
+      admin: { description: 'Handmatig bij te werken vrije plekken, zolang er geen live feed is. Bepaalt de beschikbaarheidsstatus (ruim/beperkt/vol).' },
     },
     { name: 'description', type: 'richText' },
     {
