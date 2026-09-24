@@ -16,6 +16,6 @@ export const migrations = [
   {
     up: migration_20260924_193345_add_location_pricing_fields.up,
     down: migration_20260924_193345_add_location_pricing_fields.down,
-    name: '20260924_193345_add_location_pricing_fields'
+    name: '20260924_193345_add_location_pricing_fields',
   },
 ];
