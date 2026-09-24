@@ -6,6 +6,7 @@ import { Media } from '@/components/Media'
 import { Icon } from '@/components/py/Icon'
 import { PyButton } from '@/components/py/Button'
 import { PyLocationTypeBadge, PyPriceBlob } from '@/components/py/Chrome'
+import { locationHref } from '@/utilities/locationHref'
 
 type Props = LocatieHeroBlock & {
   locatie: Location
@@ -64,7 +65,7 @@ export const LocatieHeroComponent: React.FC<Props> = ({
             <PyButton href={reserveerUrl || '/locaties'} variant="primary">
               {reserveerLabel || 'Reserveer nu'}
             </PyButton>
-            <PyButton href={`/parkeren/${stad?.slug ?? ''}/${locatie.slug}`.replace('/parkeren//', '/parkeren/')} variant="aqua" icon="car">
+            <PyButton href={locationHref(locatie)} variant="aqua" icon="car">
               Snel boeken
             </PyButton>
             <PyButton href="/klantenservice" variant="outline" icon="phone">

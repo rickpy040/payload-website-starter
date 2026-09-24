@@ -26,11 +26,13 @@
   font-family: var(--py-font);
   text-rendering: geometricPrecision;
 }
-.py-scope a { color: inherit; text-decoration: none; }
-.py-scope button, .py-scope input, .py-scope select, .py-scope textarea { font: inherit; }
-.py-scope button { cursor: pointer; }
-.py-scope img { display: block; max-width: 100%; }
-.py-scope em { font-style: italic; }
+/* :where() keeps these resets at zero specificity so component classes such
+   as .py-button--primary (white text) still win over them. */
+:where(.py-scope) a { color: inherit; text-decoration: none; }
+:where(.py-scope) :where(button, input, select, textarea) { font: inherit; }
+:where(.py-scope) button { cursor: pointer; }
+:where(.py-scope) img { display: block; max-width: 100%; }
+:where(.py-scope) em { font-style: italic; }
 
 .py-container {
   width: min(1180px, calc(100% - 48px));
