@@ -81,6 +81,8 @@ export const Locations: CollectionConfig = {
         { label: 'Heerhugowaard', value: 'heerhugowaard' },
         { label: 'Zoetermeer', value: 'zoetermeer' },
         { label: 'Almere', value: 'almere' },
+        { label: 'Regio Zuid-Holland', value: 'regio-zuid-holland' },
+        { label: 'Regio Gelderland', value: 'regio-gelderland' },
       ],
     },
     {
@@ -112,6 +114,8 @@ export const Locations: CollectionConfig = {
       label: 'Aeroparker product-ID',
       admin: { description: 'Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)' },
     },
+    { name: 'leverancier', type: 'text', label: 'Leverancier parkeersysteem', admin: { position: 'sidebar', description: 'Bv. IP Parking, Skidata, WPS' } },
+    { name: 'googleMapsUrl', type: 'text', label: 'Google Maps-link' },
     {
       name: 'pricePerHour',
       type: 'number',

@@ -17,6 +17,8 @@ const CITY_LABEL: Record<Location['city'], string> = {
   heerhugowaard: 'Heerhugowaard',
   zoetermeer: 'Zoetermeer',
   almere: 'Almere',
+  'regio-zuid-holland': 'Regio Zuid-Holland',
+  'regio-gelderland': 'Regio Gelderland',
 }
 
 export function locationCityLabel(location: Pick<Location, 'city'>): string {
