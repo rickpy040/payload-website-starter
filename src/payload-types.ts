@@ -72,6 +72,9 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    locations: Location;
+    pois: Pois;
+    faq: Faq;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +97,9 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    locations: LocationsSelect<false> | LocationsSelect<true>;
+    pois: PoisSelect<false> | PoisSelect<true>;
+    faq: FaqSelect<false> | FaqSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -292,7 +298,6 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -776,6 +781,134 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "locations".
+ */
+export interface Location {
+  id: number;
+  name: string;
+  /**
+   * Gebruikt in de URL, bv. parkeren/eindhoven-strijp-s
+   */
+  slug: string;
+  city:
+    | 'eindhoven'
+    | 'rotterdam'
+    | 'amsterdam'
+    | 'den-haag'
+    | 'utrecht'
+    | 'tilburg'
+    | 'heerhugowaard'
+    | 'zoetermeer'
+    | 'almere';
+  address?: {
+    street?: string | null;
+    postalCode?: string | null;
+    cityName?: string | null;
+  };
+  /**
+   * [lng, lat]
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinates?: [number, number] | null;
+  /**
+   * Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)
+   */
+  aeroparkerProductId: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  images?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  amenities?: ('covered' | 'ev-charging' | 'disabled-access' | '24-7' | 'guarded')[] | null;
+  /**
+   * Terminalregister per locatie, bv. BSG-I1
+   */
+  terminals?:
+    | {
+        code: string;
+        type?: ('inrit' | 'uitrit' | 'betaal') | null;
+        id?: string | null;
+      }[]
+    | null;
+  pois?: (number | Pois)[] | null;
+  faqs?: (number | Faq)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pois".
+ */
+export interface Pois {
+  id: number;
+  name: string;
+  category: 'restaurant' | 'shop' | 'hotel' | 'attraction' | 'transit' | 'venue';
+  locations?: (number | Location)[] | null;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinates?: [number, number] | null;
+  address?: string | null;
+  distanceToParkingMeters?: number | null;
+  description?: string | null;
+  image?: (number | null) | Media;
+  externalUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category?: ('algemeen' | 'betalen' | 'abonnementen' | 'reserveren' | 'zakelijk') | null;
+  /**
+   * Leeg laten = geldt voor alle locaties
+   */
+  locations?: (number | Location)[] | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -983,6 +1116,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'locations';
+        value: number | Location;
+      } | null)
+    | ({
+        relationTo: 'pois';
+        value: number | Pois;
+      } | null)
+    | ({
+        relationTo: 'faq';
+        value: number | Faq;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1219,7 +1364,6 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1350,6 +1494,74 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "locations_select".
+ */
+export interface LocationsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  city?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        postalCode?: T;
+        cityName?: T;
+      };
+  coordinates?: T;
+  aeroparkerProductId?: T;
+  description?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  amenities?: T;
+  terminals?:
+    | T
+    | {
+        code?: T;
+        type?: T;
+        id?: T;
+      };
+  pois?: T;
+  faqs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pois_select".
+ */
+export interface PoisSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  locations?: T;
+  coordinates?: T;
+  address?: T;
+  distanceToParkingMeters?: T;
+  description?: T;
+  image?: T;
+  externalUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq_select".
+ */
+export interface FaqSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  locations?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
