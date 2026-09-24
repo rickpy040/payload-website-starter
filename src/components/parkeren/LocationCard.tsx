@@ -5,6 +5,7 @@ import { Pin } from './Brandmark'
 import { AvailabilityBadge } from './AvailabilityBadge'
 import { getAvailabilityStatus, fmtPrice, hasPrice } from './availability'
 import { cn } from '@/utilities/ui'
+import { locationHref } from '@/utilities/locationHref'
 
 const CITY_LABEL: Record<Location['city'], string> = {
   eindhoven: 'Eindhoven',
@@ -40,7 +41,7 @@ export function LocationCard({
 
   return (
     <Link
-      href={`/parkeren/${location.slug}`}
+      href={locationHref(location)}
       onClick={onSelect}
       className={cn(
         'flex items-center gap-4 border-b border-py-line py-5 px-2 transition-colors hover:bg-py-paper',

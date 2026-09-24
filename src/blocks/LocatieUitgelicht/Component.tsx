@@ -5,6 +5,7 @@ import type { LocatieUitgelichtBlock, Location } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { PyButton } from '@/components/py/Button'
 import RichText from '@/components/RichText'
+import { locationHref } from '@/utilities/locationHref'
 
 export const LocatieUitgelichtComponent: React.FC<LocatieUitgelichtBlock> = ({
   titel,
@@ -14,8 +15,7 @@ export const LocatieUitgelichtComponent: React.FC<LocatieUitgelichtBlock> = ({
   if (!locatie || typeof locatie !== 'object') return null
 
   const loc = locatie as Location
-  const stadSlug = typeof loc.stad === 'object' && loc.stad ? loc.stad.slug : loc.city
-  const href = stadSlug ? `/parkeren/${stadSlug}/${loc.slug}` : `/parkeren/${loc.slug}`
+  const href = locationHref(loc)
   const image = loc.images?.[0]?.image
 
   return (

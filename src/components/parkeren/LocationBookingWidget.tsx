@@ -6,6 +6,7 @@ import type { Location } from '@/payload-types'
 import { Brandmark } from './Brandmark'
 import { fmtPrice, getAvailabilityStatus, hasPrice } from './availability'
 import { AvailabilityBadge } from './AvailabilityBadge'
+import { locationHref } from '@/utilities/locationHref'
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -91,7 +92,7 @@ export function LocationBookingWidget({ location }: { location: Location }) {
       params.set('price', String(q.price))
       params.set('currency', q.currency)
     }
-    router.push(`/parkeren/${location.slug}/boeken?${params.toString()}`)
+    router.push(`${locationHref(location)}/boeken?${params.toString()}`)
   }
 
   const status = getAvailabilityStatus(location.spotsFree, location.spotsTotal)

@@ -1,10 +1,11 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 import { RenderBlocksStad } from '@/blocks/RenderBlocksStad'
+import { locationHref } from '@/utilities/locationHref'
 
 type Args = {
   params: Promise<{ stad: string }>
@@ -37,7 +38,20 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 export default async function StadPage({ params }: Args) {
   const { stad: slug } = await params
   const stad = await getStad(slug)
-  if (!stad) notFound()
+  if (!stad) {
+    // Location pages used to live at /parkeren/{locatie}; keep those links working.
+    const payload = await getPayload({ config: configPromise })
+    const { docs } = await payload.find({
+      collection: 'locations',
+      draft: false,
+      limit: 1,
+      depth: 1,
+      overrideAccess: false,
+      where: { slug: { equals: slug } },
+    })
+    if (docs[0]) permanentRedirect(locationHref(docs[0]))
+    notFound()
+  }
 
   return (
     <div className="py-scope">

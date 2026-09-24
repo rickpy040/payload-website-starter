@@ -4,13 +4,13 @@ import Link from 'next/link'
 import type { Pois, Location } from '@/payload-types'
 import { PyButton } from '@/components/py/Button'
 import { Media } from '@/components/Media'
+import { locationHref } from '@/utilities/locationHref'
 
 type Props = { poi: Pois }
 
 export const PoiHeroComponent: React.FC<Props> = ({ poi }) => {
   const titel = poi.titel || `Parkeren bij ${poi.name}`
   const primaire = typeof poi.primaireLocatie === 'object' ? (poi.primaireLocatie as Location) : null
-  const stadSlug = primaire && typeof primaire.stad === 'object' && primaire.stad ? primaire.stad.slug : primaire?.city
 
   return (
     <section className="py-container" style={{ paddingTop: 24 }}>
@@ -29,7 +29,7 @@ export const PoiHeroComponent: React.FC<Props> = ({ poi }) => {
               {primaire.name}
               {poi.loopafstand ? ` — ${poi.loopafstand} min lopen` : ''}
             </p>
-            <PyButton href={stadSlug ? `/parkeren/${stadSlug}/${primaire.slug}` : '/locaties'}>
+            <PyButton href={locationHref(primaire)}>
               Bekijk deze garage
             </PyButton>
           </div>
