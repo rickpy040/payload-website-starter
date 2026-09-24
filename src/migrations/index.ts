@@ -5,6 +5,7 @@ import * as migration_20260924_211324_editable_page_sections from './20260924_21
 import * as migration_20260924_215000_location_city_regios_leverancier from './20260924_215000_location_city_regios_leverancier';
 import * as migration_20260924_215226_seed_parkingyou_basis from './20260924_215226_seed_parkingyou_basis';
 import * as migration_20260924_220544_import_locaties_csv from './20260924_220544_import_locaties_csv';
+import * as migration_20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo from './20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260924_220544_import_locaties_csv.up,
     down: migration_20260924_220544_import_locaties_csv.down,
     name: '20260924_220544_import_locaties_csv',
+  },
+  {
+    up: migration_20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo.up,
+    down: migration_20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo.down,
+    name: '20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo'
   },
 ];
