@@ -6,11 +6,15 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Faq } from './collections/Faq'
+import { FaqCategorieen } from './collections/FaqCategorieen'
 import { Locations } from './collections/Locations'
 import { Media } from './collections/Media'
+import { Nieuws } from './collections/Nieuws'
 import { Pages } from './collections/Pages'
 import { Pois } from './collections/Pois'
 import { Posts } from './collections/Posts'
+import { Steden } from './collections/Steden'
+import { Evenementen } from './collections/Evenementen'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -66,7 +70,20 @@ export default buildConfig({
       connectionString: process.env.POSTGRES_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Locations, Pois, Faq],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    Steden,
+    Locations,
+    Pois,
+    Faq,
+    FaqCategorieen,
+    Nieuws,
+    Evenementen,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
     ...plugins,

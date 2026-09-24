@@ -7,6 +7,10 @@ import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { UspRij } from '@/blocks/UspRij/config'
+import { Citaat } from '@/blocks/Citaat/config'
+import { FaqBlok } from '@/blocks/FaqBlok/config'
+import { LocatieUitgelicht } from '@/blocks/LocatieUitgelicht/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -72,7 +76,17 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                UspRij,
+                Citaat,
+                FaqBlok,
+                LocatieUitgelicht,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,
@@ -115,6 +129,17 @@ export const Pages: CollectionConfig<'pages'> = {
       type: 'date',
       admin: {
         position: 'sidebar',
+      },
+    },
+    {
+      name: 'bovenliggendePagina',
+      type: 'relationship',
+      relationTo: 'pages',
+      label: 'Bovenliggende pagina',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Voor de /zakelijk/{onderwerp} nesting uit docs/IA.md. Informatief voor de breadcrumb; de URL zelf komt uit het slug-veld hieronder (mag een pad met een "/" zijn, bv. "zakelijk/klein-zakelijk-parkeren").',
       },
     },
     slugField(),
