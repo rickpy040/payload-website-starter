@@ -1,7 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated } from '../access/authenticated'
+
 export const Pois: CollectionConfig = {
   slug: 'pois',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: () => true,
+    update: authenticated,
+  },
   admin: { useAsTitle: 'name' },
   fields: [
     { name: 'name', type: 'text', required: true },

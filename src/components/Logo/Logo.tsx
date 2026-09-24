@@ -1,29 +1,21 @@
 import clsx from 'clsx'
 import React from 'react'
 
+import { Brandmark } from '@/components/parkeren/Brandmark'
+
 interface Props {
   className?: string
-  loading?: 'lazy' | 'eager'
-  priority?: 'auto' | 'high' | 'low'
+  dark?: boolean
 }
 
-export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
-
-  const loading = loadingFromProps || 'lazy'
-  const priority = priorityFromProps || 'low'
-
+export const Logo = ({ className, dark = false }: Props) => {
   return (
-    /* eslint-disable @next/next/no-img-element */
-    <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
-      loading={loading}
-      fetchPriority={priority}
-      decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-logo-light.svg"
-    />
+    <span className={clsx('inline-flex items-center gap-2.5', className)}>
+      <Brandmark variant={dark ? 'duotone-white' : 'duotone'} className="h-[26px] w-[22px] flex-none" />
+      <span className={clsx('text-[21px] leading-none tracking-tight', dark ? 'text-white' : 'text-py-blauw')}>
+        <span className="font-medium">parking</span>
+        <span className="font-bold">you</span>
+      </span>
+    </span>
   )
 }
