@@ -914,7 +914,9 @@ export interface Location {
     | 'tilburg'
     | 'heerhugowaard'
     | 'zoetermeer'
-    | 'almere';
+    | 'almere'
+    | 'regio-zuid-holland'
+    | 'regio-gelderland';
   /**
    * Koppelt deze locatie aan haar stadspagina (/parkeren/{stad}). Vult de stadssectie en de breadcrumb.
    */
@@ -936,6 +938,11 @@ export interface Location {
    * Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)
    */
   aeroparkerProductId: string;
+  /**
+   * Bv. IP Parking, Skidata, WPS
+   */
+  leverancier?: string | null;
+  googleMapsUrl?: string | null;
   /**
    * In euro, getoond als fallback zolang er geen live Aeroparker-tarief is opgehaald
    */
@@ -2168,6 +2175,8 @@ export interface LocationsSelect<T extends boolean = true> {
       };
   coordinates?: T;
   aeroparkerProductId?: T;
+  leverancier?: T;
+  googleMapsUrl?: T;
   pricePerHour?: T;
   rating?: T;
   openingHours?: T;
