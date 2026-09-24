@@ -13,6 +13,13 @@ import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
+/**
+ * A catch-all rather than a single `[slug]`, so a `pages` document can live at
+ * a nested path such as `zakelijk/klein-zakelijk-parkeren` or `over-ons/team`
+ * (docs/IA.md) just by putting the full path, slashes included, in its own
+ * `slug` field. No nested-docs plugin, no second routing system: the stored
+ * slug *is* the URL below `/`.
+ */
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const pages = await payload.find({
@@ -31,7 +38,7 @@ export async function generateStaticParams() {
       return doc.slug !== 'home'
     })
     .map(({ slug }) => {
-      return { slug }
+      return { slug: slug.split('/').filter(Boolean) }
     })
 
   return params
@@ -39,16 +46,15 @@ export async function generateStaticParams() {
 
 type Args = {
   params: Promise<{
-    slug?: string
+    slug?: string[]
   }>
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
-  const { slug = 'home' } = await paramsPromise
-  // Decode to support slugs with special characters
-  const decodedSlug = decodeURIComponent(slug)
-  const url = '/' + decodedSlug
+  const { slug: slugParts } = await paramsPromise
+  const decodedSlug = (slugParts ?? []).map((part) => decodeURIComponent(part)).join('/') || 'home'
+  const url = decodedSlug === 'home' ? '/' : '/' + decodedSlug
   let page: RequiredDataFromCollectionSlug<'pages'> | null
 
   page = await queryPageBySlug({
@@ -56,7 +62,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
 
   // Remove this code once your website is seeded
-  if (!page && slug === 'home') {
+  if (!page && decodedSlug === 'home') {
     page = homeStatic
   }
 
@@ -81,9 +87,8 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
-  // Decode to support slugs with special characters
-  const decodedSlug = decodeURIComponent(slug)
+  const { slug: slugParts } = await paramsPromise
+  const decodedSlug = (slugParts ?? []).map((part) => decodeURIComponent(part)).join('/') || 'home'
   const page = await queryPageBySlug({
     slug: decodedSlug,
   })

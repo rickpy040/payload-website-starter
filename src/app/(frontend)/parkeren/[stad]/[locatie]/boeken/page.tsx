@@ -6,17 +6,17 @@ import { getPayload } from 'payload'
 import { CheckoutForm } from '@/components/parkeren/CheckoutForm'
 
 type Args = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ stad: string; locatie: string }>
   searchParams: Promise<{ arrival?: string; departure?: string; price?: string }>
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
-  const { slug } = await params
-  return { title: `Reservering afronden — ${slug} — parkingyou` }
+  const { locatie } = await params
+  return { title: `Reservering afronden — ${locatie} — parkingyou` }
 }
 
 export default async function BoekenPage({ params, searchParams }: Args) {
-  const { slug } = await params
+  const { locatie } = await params
   const { arrival, departure, price } = await searchParams
 
   const payload = await getPayload({ config: configPromise })
@@ -25,7 +25,7 @@ export default async function BoekenPage({ params, searchParams }: Args) {
     draft: false,
     limit: 1,
     overrideAccess: false,
-    where: { slug: { equals: slug } },
+    where: { slug: { equals: locatie } },
   })
   const location = result.docs[0]
   if (!location) notFound()
