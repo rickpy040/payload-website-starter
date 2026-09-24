@@ -7,6 +7,10 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { UspRijComponent } from '@/blocks/UspRij/Component'
+import { CitaatComponent } from '@/blocks/Citaat/Component'
+import { FaqBlokComponent } from '@/blocks/FaqBlok/Component'
+import { LocatieUitgelichtComponent } from '@/blocks/LocatieUitgelicht/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -14,6 +18,10 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  uspRij: UspRijComponent,
+  citaat: CitaatComponent,
+  faqBlok: FaqBlokComponent,
+  locatieUitgelicht: LocatieUitgelichtComponent,
 }
 
 export const RenderBlocks: React.FC<{

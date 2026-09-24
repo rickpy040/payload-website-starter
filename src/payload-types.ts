@@ -72,9 +72,13 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    steden: Steden;
     locations: Location;
     pois: Pois;
     faq: Faq;
+    'faq-categorieen': FaqCategorieen;
+    nieuws: Nieuw;
+    evenementen: Evenementen;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -97,9 +101,13 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    steden: StedenSelect<false> | StedenSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
     pois: PoisSelect<false> | PoisSelect<true>;
     faq: FaqSelect<false> | FaqSelect<true>;
+    'faq-categorieen': FaqCategorieenSelect<false> | FaqCategorieenSelect<true>;
+    nieuws: NieuwsSelect<false> | NieuwsSelect<true>;
+    evenementen: EvenementenSelect<false> | EvenementenSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -207,7 +215,17 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | UspRijBlock
+    | CitaatBlock
+    | FaqBlokBlock
+    | LocatieUitgelichtBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -217,6 +235,10 @@ export interface Page {
     description?: string | null;
   };
   publishedAt?: string | null;
+  /**
+   * Voor de /zakelijk/{onderwerp} nesting uit docs/IA.md. Informatief voor de breadcrumb; de URL zelf komt uit het slug-veld hieronder (mag een pad met een "/" zijn, bv. "zakelijk/klein-zakelijk-parkeren").
+   */
+  bovenliggendePagina?: (number | null) | Page;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -781,122 +803,56 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "locations".
+ * via the `definition` "UspRijBlock".
  */
-export interface Location {
-  id: number;
-  name: string;
-  /**
-   * Gebruikt in de URL, bv. parkeren/eindhoven-strijp-s
-   */
-  slug: string;
-  city:
-    | 'eindhoven'
-    | 'rotterdam'
-    | 'amsterdam'
-    | 'den-haag'
-    | 'utrecht'
-    | 'tilburg'
-    | 'heerhugowaard'
-    | 'zoetermeer'
-    | 'almere';
-  address?: {
-    street?: string | null;
-    postalCode?: string | null;
-    cityName?: string | null;
-  };
-  /**
-   * [lng, lat]
-   *
-   * @minItems 2
-   * @maxItems 2
-   */
-  coordinates?: [number, number] | null;
-  /**
-   * Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)
-   */
-  aeroparkerProductId: string;
-  /**
-   * Vanafprijs per uur in euro, getoond als fallback zolang er geen live Aeroparker-tarief is opgehaald
-   */
-  pricePerHour: number;
-  /**
-   * Gemiddelde beoordeling, bv. 4.6
-   */
-  rating?: number | null;
-  /**
-   * Bv. "24/7 geopend" of "06:00 – 01:00"
-   */
-  openingHours?: string | null;
-  /**
-   * Maximale inrijhoogte, bv. "2,10 m"
-   */
-  maxHeight?: string | null;
-  /**
-   * Totaal aantal plekken op deze locatie
-   */
-  spotsTotal?: number | null;
-  /**
-   * Handmatig bij te werken vrije plekken, zolang er geen live feed is. Bepaalt de beschikbaarheidsstatus (ruim/beperkt/vol).
-   */
-  spotsFree?: number | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  images?:
+export interface UspRijBlock {
+  items?:
     | {
-        image: number | Media;
+        titel: string;
+        tekst?: string | null;
+        icoon?: ('check' | 'clock' | 'shield' | 'car' | 'card' | 'bolt') | null;
         id?: string | null;
       }[]
     | null;
-  amenities?: ('covered' | 'ev-charging' | 'disabled-access' | '24-7' | 'guarded')[] | null;
-  /**
-   * Terminalregister per locatie, bv. BSG-I1
-   */
-  terminals?:
-    | {
-        code: string;
-        type?: ('inrit' | 'uitrit' | 'betaal') | null;
-        id?: string | null;
-      }[]
-    | null;
-  pois?: (number | Pois)[] | null;
-  faqs?: (number | Faq)[] | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'uspRij';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pois".
+ * via the `definition` "CitaatBlock".
  */
-export interface Pois {
+export interface CitaatBlock {
+  tekst: string;
+  naam?: string | null;
+  functie?: string | null;
+  foto?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'citaat';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlokBlock".
+ */
+export interface FaqBlokBlock {
+  titel?: string | null;
+  bron?: ('alles' | 'categorie' | 'handmatig') | null;
+  categorie?: (number | null) | FaqCategorieen;
+  vragen?: (number | Faq)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqBlok';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq-categorieen".
+ */
+export interface FaqCategorieen {
   id: number;
-  name: string;
-  category: 'restaurant' | 'shop' | 'hotel' | 'attraction' | 'transit' | 'venue';
-  locations?: (number | Location)[] | null;
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  coordinates?: [number, number] | null;
-  address?: string | null;
-  distanceToParkingMeters?: number | null;
-  description?: string | null;
-  image?: (number | null) | Media;
-  externalUrl?: string | null;
+  naam: string;
+  slug: string;
+  volgorde?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -924,12 +880,553 @@ export interface Faq {
   };
   category?: ('algemeen' | 'betalen' | 'abonnementen' | 'reserveren' | 'zakelijk') | null;
   /**
+   * Gebruikt door het FaqBlok op /veelgestelde-vragen en generieke paginas.
+   */
+  categorie?: (number | null) | FaqCategorieen;
+  /**
    * Leeg laten = geldt voor alle locaties
    */
   locations?: (number | Location)[] | null;
-  order?: number | null;
+  volgorde?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "locations".
+ */
+export interface Location {
+  id: number;
+  name: string;
+  /**
+   * Gebruikt in de URL, bv. parkeren/eindhoven/strijp-s
+   */
+  slug: string;
+  /**
+   * Gebruikt door de zoek- en boekingsflow op /parkeren. Nieuw: koppel hieronder ook de Stad-pagina.
+   */
+  city:
+    | 'eindhoven'
+    | 'rotterdam'
+    | 'amsterdam'
+    | 'den-haag'
+    | 'utrecht'
+    | 'tilburg'
+    | 'heerhugowaard'
+    | 'zoetermeer'
+    | 'almere';
+  /**
+   * Koppelt deze locatie aan haar stadspagina (/parkeren/{stad}). Vult de stadssectie en de breadcrumb.
+   */
+  stad?: (number | null) | Steden;
+  address?: {
+    street?: string | null;
+    huisnummer?: string | null;
+    postalCode?: string | null;
+    cityName?: string | null;
+  };
+  /**
+   * [lng, lat]
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinates?: [number, number] | null;
+  /**
+   * Het product/locatie-ID zoals gebruikt in de Aeroparker API (koppeling voor beschikbaarheid + prijs)
+   */
+  aeroparkerProductId: string;
+  /**
+   * In euro, getoond als fallback zolang er geen live Aeroparker-tarief is opgehaald
+   */
+  pricePerHour: number;
+  /**
+   * Gemiddelde beoordeling, bv. 4.6. Bron nog te bevestigen, zie docs/CONTENT-MODEL.md.
+   */
+  rating?: number | null;
+  /**
+   * Bv. "24/7 geopend" of "06:00 – 01:00"
+   */
+  openingHours?: string | null;
+  /**
+   * Bv. "4.50 m (open terrein)"
+   */
+  maxHeight?: string | null;
+  spotsTotal?: number | null;
+  /**
+   * Handmatig bij te werken vrije plekken, zolang er geen live feed is.
+   */
+  spotsFree?: number | null;
+  /**
+   * Gebruikt in listings, de hero en als meta-omschrijving fallback.
+   */
+  intro?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  images?:
+    | {
+        image: number | Media;
+        alt: string;
+        id?: string | null;
+      }[]
+    | null;
+  amenities?: ('covered' | 'ev-charging' | 'disabled-access' | '24-7' | 'guarded')[] | null;
+  /**
+   * Terminalregister per locatie, bv. BSG-I1
+   */
+  terminals?:
+    | {
+        code: string;
+        type?: ('inrit' | 'uitrit' | 'betaal') | null;
+        id?: string | null;
+      }[]
+    | null;
+  poiPaginas?: (number | Pois)[] | null;
+  faqs?: (number | Faq)[] | null;
+  soort?: ('Parkeerterrein' | 'Parkeergarage' | 'Ondergrondse garage' | 'Parkeerdak') | null;
+  /**
+   * Vrije tekst, bv. "8 min lopen naar centrum"
+   */
+  loopafstand?: string | null;
+  /**
+   * Vrije lijst, bv. "Laadpalen (6x)". Vervangt de vaste 'Voorzieningen'-lijst hierboven voor de nieuwe locatiepagina.
+   */
+  faciliteiten?:
+    | {
+        tekst: string;
+        id?: string | null;
+      }[]
+    | null;
+  betaalmogelijkheden?:
+    | {
+        tekst: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Vrije tekstlijst voor de 'in de buurt'-sectie. Anders dan de POI-landingspagina's hierboven.
+   */
+  poisNabij?:
+    | {
+        naam: string;
+        soort?: string | null;
+        afstand?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  uren?: {
+    open247?: boolean | null;
+    doordeweeks?: string | null;
+    zaterdag?: string | null;
+    zondag?: string | null;
+  };
+  reserveerbaar?: boolean | null;
+  waardekaart?: boolean | null;
+  strippenkaart?: boolean | null;
+  /**
+   * Hoe kom je naar binnen: slagboom, kentekenherkenning, ticket.
+   */
+  inrit?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  uitrit?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  route?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Gesynchroniseerd: alleen-lezen, wordt elke nacht overschreven door Aeroparker.
+   */
+  aeroparkerSync?: {
+    tarieven?:
+      | {
+          label: string;
+          /**
+           * Nederlandse notatie, bv. "12,00"
+           */
+          prijs: string;
+          id?: string | null;
+        }[]
+      | null;
+    dagprijs?: string | null;
+    laatsteSync?: string | null;
+    syncStatus?: ('ok' | 'verouderd' | 'vermist' | 'fout') | null;
+    syncMelding?: string | null;
+  };
+  /**
+   * Sleep om te herordenen, of verwijder een sectie om hem uit te zetten. Elke sectie leest zijn eigen inhoud uit de velden hierboven.
+   */
+  secties?:
+    | (
+        | LocatieHeroBlock
+        | LocatieTarievenBlock
+        | LocatieFaciliteitenBlock
+        | LocatieOpeningstijdenBlock
+        | LocatiePoisNabijBlock
+        | LocatieKaartProductenBlock
+        | LocatieEvenementenBlock
+        | LocatieFaqBlock
+        | ContentBlock
+        | CitaatBlock
+      )[]
+    | null;
+  seo?: {
+    /**
+     * Valt terug op de naam van de locatie.
+     */
+    titel?: string | null;
+    /**
+     * Valt terug op de introductietekst.
+     */
+    omschrijving?: string | null;
+    afbeelding?: (number | null) | Media;
+    geenIndex?: boolean | null;
+  };
+  oudeId?: number | null;
+  oudeSlugs?:
+    | {
+        slug: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "steden".
+ */
+export interface Steden {
+  id: number;
+  naam: string;
+  /**
+   * Gebruikt in de URL: /parkeren/{url}
+   */
+  slug: string;
+  /**
+   * Verandert de H1 van "Parkeren in {naam}" naar "Parkeren in de {naam}"
+   */
+  isRegio?: boolean | null;
+  provincie?: string | null;
+  /**
+   * Alleen voor het centreren van de kaart, dit is geen locatie.
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinaten?: [number, number] | null;
+  /**
+   * Sleep om te herordenen. Elke sectie kan uit staan door hem te verwijderen; niets hier is verplicht in een vaste volgorde.
+   */
+  secties?: (StadHeroBlock | StadLocatiesLijstBlock | ContentBlock | CitaatBlock | CallToActionBlock)[] | null;
+  /**
+   * Voor het oplossen van cid= redirects.
+   */
+  oudeCid?: number | null;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadHeroBlock".
+ */
+export interface StadHeroBlock {
+  /**
+   * Standaard: "Parkeren in {naam van de stad}"
+   */
+  titel?: string | null;
+  intro?: string | null;
+  afbeelding?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stadHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadLocatiesLijstBlock".
+ */
+export interface StadLocatiesLijstBlock {
+  legeMelding?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stadLocatiesLijst';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pois".
+ */
+export interface Pois {
+  id: number;
+  name: string;
+  /**
+   * Standaard: "Parkeren bij {naam}"
+   */
+  titel?: string | null;
+  /**
+   * Gebruikt onder /parkeren-bij/{url}
+   */
+  slug: string;
+  category: 'restaurant' | 'shop' | 'hotel' | 'attraction' | 'transit' | 'venue';
+  /**
+   * Verplicht: dit is wat een POI-pagina onmogelijk een eiland maakt.
+   */
+  primaireLocatie: number | Location;
+  extraLocaties?: (number | Location)[] | null;
+  loopafstand?: number | null;
+  intro: string;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinaten?: [number, number] | null;
+  address?: string | null;
+  image?: (number | null) | Media;
+  externalUrl?: string | null;
+  secties?: (PoiHeroBlock | ContentBlock | FaqBlokBlock | CitaatBlock)[] | null;
+  seo?: {
+    titel?: string | null;
+    omschrijving?: string | null;
+    geenIndex?: boolean | null;
+  };
+  oudeSlugs?:
+    | {
+        slug: string;
+        id?: string | null;
+      }[]
+    | null;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PoiHeroBlock".
+ */
+export interface PoiHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'poiHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieHeroBlock".
+ */
+export interface LocatieHeroBlock {
+  reserveerLabel?: string | null;
+  /**
+   * Bijvoorbeeld de deep link naar Aeroparker voor deze locatie.
+   */
+  reserveerUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieTarievenBlock".
+ */
+export interface LocatieTarievenBlock {
+  titel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieTarieven';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieFaciliteitenBlock".
+ */
+export interface LocatieFaciliteitenBlock {
+  titel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieFaciliteiten';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieOpeningstijdenBlock".
+ */
+export interface LocatieOpeningstijdenBlock {
+  titel?: string | null;
+  telefoon?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieOpeningstijden';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatiePoisNabijBlock".
+ */
+export interface LocatiePoisNabijBlock {
+  titel?: string | null;
+  kaartbijschrift?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatiePoisNabij';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieKaartProductenBlock".
+ */
+export interface LocatieKaartProductenBlock {
+  titelVoor?: string | null;
+  titelNadruk?: string | null;
+  titelNa?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieKaartProducten';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieEvenementenBlock".
+ */
+export interface LocatieEvenementenBlock {
+  titelVoor?: string | null;
+  titelNadruk?: string | null;
+  titelNa?: string | null;
+  tekst?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieEvenementen';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieFaqBlock".
+ */
+export interface LocatieFaqBlock {
+  titel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieFaq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieUitgelichtBlock".
+ */
+export interface LocatieUitgelichtBlock {
+  titel?: string | null;
+  locatie: number | Location;
+  tekst?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieUitgelicht';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nieuws".
+ */
+export interface Nieuw {
+  id: number;
+  titel: string;
+  /**
+   * Gebruikt onder /nieuws/{url}
+   */
+  slug: string;
+  publicatiedatum: string;
+  auteur?: string | null;
+  samenvatting: string;
+  inhoud: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  hero?: (number | null) | Media;
+  gerelateerdeLocaties?: (number | Location)[] | null;
+  gerelateerdeSteden?: (number | Steden)[] | null;
+  seo?: {
+    titel?: string | null;
+    omschrijving?: string | null;
+    afbeelding?: (number | null) | Media;
+  };
+  oudeId?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "evenementen".
+ */
+export interface Evenementen {
+  id: number;
+  naam: string;
+  slug: string;
+  /**
+   * Bv. Festival of Sport
+   */
+  soort?: string | null;
+  kleur?: ('orange' | 'blue' | 'aqua') | null;
+  datums?: string | null;
+  afbeelding?: (number | null) | Media;
+  vanafPrijs?: string | null;
+  locaties: (number | Location)[];
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -951,6 +1448,22 @@ export interface Redirect {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'steden';
+          value: number | Steden;
+        } | null)
+      | ({
+          relationTo: 'locations';
+          value: number | Location;
+        } | null)
+      | ({
+          relationTo: 'pois';
+          value: number | Pois;
+        } | null)
+      | ({
+          relationTo: 'nieuws';
+          value: number | Nieuw;
         } | null);
     url?: string | null;
   };
@@ -1142,6 +1655,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'steden';
+        value: number | Steden;
+      } | null)
+    | ({
         relationTo: 'locations';
         value: number | Location;
       } | null)
@@ -1152,6 +1669,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'faq';
         value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'faq-categorieen';
+        value: number | FaqCategorieen;
+      } | null)
+    | ({
+        relationTo: 'nieuws';
+        value: number | Nieuw;
+      } | null)
+    | ({
+        relationTo: 'evenementen';
+        value: number | Evenementen;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1251,6 +1780,10 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        uspRij?: T | UspRijBlockSelect<T>;
+        citaat?: T | CitaatBlockSelect<T>;
+        faqBlok?: T | FaqBlokBlockSelect<T>;
+        locatieUitgelicht?: T | LocatieUitgelichtBlockSelect<T>;
       };
   meta?:
     | T
@@ -1260,6 +1793,7 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
+  bovenliggendePagina?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -1347,6 +1881,57 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UspRijBlock_select".
+ */
+export interface UspRijBlockSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        icoon?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CitaatBlock_select".
+ */
+export interface CitaatBlockSelect<T extends boolean = true> {
+  tekst?: T;
+  naam?: T;
+  functie?: T;
+  foto?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlokBlock_select".
+ */
+export interface FaqBlokBlockSelect<T extends boolean = true> {
+  titel?: T;
+  bron?: T;
+  categorie?: T;
+  vragen?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieUitgelichtBlock_select".
+ */
+export interface LocatieUitgelichtBlockSelect<T extends boolean = true> {
+  titel?: T;
+  locatie?: T;
+  tekst?: T;
   id?: T;
   blockName?: T;
 }
@@ -1521,16 +2106,63 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "steden_select".
+ */
+export interface StedenSelect<T extends boolean = true> {
+  naam?: T;
+  slug?: T;
+  isRegio?: T;
+  provincie?: T;
+  coordinaten?: T;
+  secties?:
+    | T
+    | {
+        stadHero?: T | StadHeroBlockSelect<T>;
+        stadLocatiesLijst?: T | StadLocatiesLijstBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        citaat?: T | CitaatBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+      };
+  oudeCid?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadHeroBlock_select".
+ */
+export interface StadHeroBlockSelect<T extends boolean = true> {
+  titel?: T;
+  intro?: T;
+  afbeelding?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadLocatiesLijstBlock_select".
+ */
+export interface StadLocatiesLijstBlockSelect<T extends boolean = true> {
+  legeMelding?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "locations_select".
  */
 export interface LocationsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   city?: T;
+  stad?: T;
   address?:
     | T
     | {
         street?: T;
+        huisnummer?: T;
         postalCode?: T;
         cityName?: T;
       };
@@ -1542,11 +2174,13 @@ export interface LocationsSelect<T extends boolean = true> {
   maxHeight?: T;
   spotsTotal?: T;
   spotsFree?: T;
+  intro?: T;
   description?: T;
   images?:
     | T
     | {
         image?: T;
+        alt?: T;
         id?: T;
       };
   amenities?: T;
@@ -1557,11 +2191,171 @@ export interface LocationsSelect<T extends boolean = true> {
         type?: T;
         id?: T;
       };
-  pois?: T;
+  poiPaginas?: T;
   faqs?: T;
+  soort?: T;
+  loopafstand?: T;
+  faciliteiten?:
+    | T
+    | {
+        tekst?: T;
+        id?: T;
+      };
+  betaalmogelijkheden?:
+    | T
+    | {
+        tekst?: T;
+        id?: T;
+      };
+  poisNabij?:
+    | T
+    | {
+        naam?: T;
+        soort?: T;
+        afstand?: T;
+        id?: T;
+      };
+  uren?:
+    | T
+    | {
+        open247?: T;
+        doordeweeks?: T;
+        zaterdag?: T;
+        zondag?: T;
+      };
+  reserveerbaar?: T;
+  waardekaart?: T;
+  strippenkaart?: T;
+  inrit?: T;
+  uitrit?: T;
+  route?: T;
+  aeroparkerSync?:
+    | T
+    | {
+        tarieven?:
+          | T
+          | {
+              label?: T;
+              prijs?: T;
+              id?: T;
+            };
+        dagprijs?: T;
+        laatsteSync?: T;
+        syncStatus?: T;
+        syncMelding?: T;
+      };
+  secties?:
+    | T
+    | {
+        locatieHero?: T | LocatieHeroBlockSelect<T>;
+        locatieTarieven?: T | LocatieTarievenBlockSelect<T>;
+        locatieFaciliteiten?: T | LocatieFaciliteitenBlockSelect<T>;
+        locatieOpeningstijden?: T | LocatieOpeningstijdenBlockSelect<T>;
+        locatiePoisNabij?: T | LocatiePoisNabijBlockSelect<T>;
+        locatieKaartProducten?: T | LocatieKaartProductenBlockSelect<T>;
+        locatieEvenementen?: T | LocatieEvenementenBlockSelect<T>;
+        locatieFaq?: T | LocatieFaqBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        citaat?: T | CitaatBlockSelect<T>;
+      };
+  seo?:
+    | T
+    | {
+        titel?: T;
+        omschrijving?: T;
+        afbeelding?: T;
+        geenIndex?: T;
+      };
+  oudeId?: T;
+  oudeSlugs?:
+    | T
+    | {
+        slug?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieHeroBlock_select".
+ */
+export interface LocatieHeroBlockSelect<T extends boolean = true> {
+  reserveerLabel?: T;
+  reserveerUrl?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieTarievenBlock_select".
+ */
+export interface LocatieTarievenBlockSelect<T extends boolean = true> {
+  titel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieFaciliteitenBlock_select".
+ */
+export interface LocatieFaciliteitenBlockSelect<T extends boolean = true> {
+  titel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieOpeningstijdenBlock_select".
+ */
+export interface LocatieOpeningstijdenBlockSelect<T extends boolean = true> {
+  titel?: T;
+  telefoon?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatiePoisNabijBlock_select".
+ */
+export interface LocatiePoisNabijBlockSelect<T extends boolean = true> {
+  titel?: T;
+  kaartbijschrift?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieKaartProductenBlock_select".
+ */
+export interface LocatieKaartProductenBlockSelect<T extends boolean = true> {
+  titelVoor?: T;
+  titelNadruk?: T;
+  titelNa?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieEvenementenBlock_select".
+ */
+export interface LocatieEvenementenBlockSelect<T extends boolean = true> {
+  titelVoor?: T;
+  titelNadruk?: T;
+  titelNa?: T;
+  tekst?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieFaqBlock_select".
+ */
+export interface LocatieFaqBlockSelect<T extends boolean = true> {
+  titel?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1569,16 +2363,50 @@ export interface LocationsSelect<T extends boolean = true> {
  */
 export interface PoisSelect<T extends boolean = true> {
   name?: T;
+  titel?: T;
+  slug?: T;
   category?: T;
-  locations?: T;
-  coordinates?: T;
+  primaireLocatie?: T;
+  extraLocaties?: T;
+  loopafstand?: T;
+  intro?: T;
+  coordinaten?: T;
   address?: T;
-  distanceToParkingMeters?: T;
-  description?: T;
   image?: T;
   externalUrl?: T;
+  secties?:
+    | T
+    | {
+        poiHero?: T | PoiHeroBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        faqBlok?: T | FaqBlokBlockSelect<T>;
+        citaat?: T | CitaatBlockSelect<T>;
+      };
+  seo?:
+    | T
+    | {
+        titel?: T;
+        omschrijving?: T;
+        geenIndex?: T;
+      };
+  oudeSlugs?:
+    | T
+    | {
+        slug?: T;
+        id?: T;
+      };
+  publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PoiHeroBlock_select".
+ */
+export interface PoiHeroBlockSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1588,10 +2416,66 @@ export interface FaqSelect<T extends boolean = true> {
   question?: T;
   answer?: T;
   category?: T;
+  categorie?: T;
   locations?: T;
-  order?: T;
+  volgorde?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq-categorieen_select".
+ */
+export interface FaqCategorieenSelect<T extends boolean = true> {
+  naam?: T;
+  slug?: T;
+  volgorde?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nieuws_select".
+ */
+export interface NieuwsSelect<T extends boolean = true> {
+  titel?: T;
+  slug?: T;
+  publicatiedatum?: T;
+  auteur?: T;
+  samenvatting?: T;
+  inhoud?: T;
+  hero?: T;
+  gerelateerdeLocaties?: T;
+  gerelateerdeSteden?: T;
+  seo?:
+    | T
+    | {
+        titel?: T;
+        omschrijving?: T;
+        afbeelding?: T;
+      };
+  oudeId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "evenementen_select".
+ */
+export interface EvenementenSelect<T extends boolean = true> {
+  naam?: T;
+  slug?: T;
+  soort?: T;
+  kleur?: T;
+  datums?: T;
+  afbeelding?: T;
+  vanafPrijs?: T;
+  locaties?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

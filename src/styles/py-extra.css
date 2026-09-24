@@ -1,0 +1,192 @@
+/*
+ * Additions to prototype.css for UI patterns the new block-based marketing
+ * pages need that the ported prototype stylesheet did not already have
+ * (the prototype only ever showed three hand-built locations; these blocks
+ * have to work for all 37 and for pages the prototype never designed).
+ * Scoped under .py-scope for the same reason as prototype.css itself.
+ */
+
+.py-scope .py-lead {
+  margin-top: 8px;
+  max-width: 60ch;
+  color: var(--py-muted);
+  font-size: 1.05rem;
+}
+
+.py-scope .py-empty-note {
+  border-radius: var(--py-radius);
+  background: var(--py-paper);
+  padding: 16px;
+  color: var(--py-muted);
+}
+
+.py-scope .py-back-link {
+  color: var(--py-blue);
+  font-size: 0.9rem;
+}
+.py-scope .py-back-link a {
+  color: var(--py-blue);
+  text-decoration: underline;
+}
+
+.py-scope .py-section {
+  padding: 48px 0;
+}
+.py-scope .py-section--paper {
+  background: var(--py-paper);
+}
+
+/* Location list (city page) */
+.py-scope .py-location-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.py-scope .py-location-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--py-line);
+  border-radius: var(--py-radius);
+  padding: 16px 18px;
+  transition: border-color 0.15s ease;
+}
+.py-scope .py-location-list__item:hover {
+  border-color: var(--py-blue);
+}
+.py-scope .py-location-list__address {
+  display: block;
+  color: var(--py-muted);
+  font-size: 0.85rem;
+}
+.py-scope .py-location-list__meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.85rem;
+  color: var(--py-muted);
+  flex-shrink: 0;
+}
+
+/* Quote block */
+.py-scope .py-quote {
+  margin: 0;
+  padding: 32px;
+  border-radius: var(--py-radius);
+  background: var(--py-paper);
+}
+.py-scope .py-quote p {
+  margin: 0;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--py-text);
+}
+.py-scope .py-quote__footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+.py-scope .py-quote__footer strong {
+  display: block;
+}
+.py-scope .py-quote__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+/* USP row block */
+.py-scope .py-usp-row {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-top: 24px;
+}
+.py-scope .py-usp-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.py-scope .py-usp-item strong {
+  display: block;
+}
+.py-scope .py-usp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--py-paper);
+  color: var(--py-blue);
+}
+
+/* Generic FAQ block */
+.py-scope .py-faq-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.py-scope .py-faq-item {
+  border-bottom: 1px solid var(--py-line);
+  padding: 16px 0;
+}
+.py-scope .py-faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+.py-scope .py-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.py-scope .py-faq-item[open] summary {
+  color: var(--py-blue);
+}
+.py-scope .py-faq-item .py-faq-answer {
+  margin-top: 10px;
+  color: var(--py-muted);
+}
+.py-scope .py-faq-category {
+  margin-top: 32px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--py-muted);
+}
+
+/* Location-uitgelicht card */
+.py-scope .py-uitgelicht-card {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid var(--py-line);
+  border-radius: var(--py-radius);
+  padding: 20px;
+  margin-top: 24px;
+}
+.py-scope .py-uitgelicht-card img {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--py-radius);
+  flex-shrink: 0;
+}
+
+/* Stacked info sections that replace the prototype's tab widget */
+.py-scope .py-info-section {
+  padding: 40px 0;
+  border-top: 1px solid var(--py-line);
+}
+.py-scope .py-info-section__intro {
+  margin-bottom: 20px;
+}
