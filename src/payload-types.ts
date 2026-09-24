@@ -225,6 +225,11 @@ export interface Page {
     | CitaatBlock
     | FaqBlokBlock
     | LocatieUitgelichtBlock
+    | KaartenSliderBlock
+    | StappenPlanBlock
+    | CijfersRijBlock
+    | DoelgroepenBlokBlock
+    | AppPromoBlokBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1373,6 +1378,110 @@ export interface LocatieUitgelichtBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "KaartenSliderBlock".
+ */
+export interface KaartenSliderBlock {
+  titel?: string | null;
+  kaarten?:
+    | {
+        afbeelding: number | Media;
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'kaartenSlider';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StappenPlanBlock".
+ */
+export interface StappenPlanBlock {
+  titel?: string | null;
+  stappen?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stappenPlan';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CijfersRijBlock".
+ */
+export interface CijfersRijBlock {
+  cijfers?:
+    | {
+        waarde: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cijfersRij';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DoelgroepenBlokBlock".
+ */
+export interface DoelgroepenBlokBlock {
+  titel?: string | null;
+  groepen?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        punten?:
+          | {
+              tekst: string;
+              id?: string | null;
+            }[]
+          | null;
+        link?: {
+          label?: string | null;
+          url?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'doelgroepenBlok';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AppPromoBlokBlock".
+ */
+export interface AppPromoBlokBlock {
+  titel: string;
+  subtitel?: string | null;
+  afbeelding?: (number | null) | Media;
+  features?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  knoppen?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'appPromo';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "nieuws".
  */
 export interface Nieuw {
@@ -1791,6 +1900,11 @@ export interface PagesSelect<T extends boolean = true> {
         citaat?: T | CitaatBlockSelect<T>;
         faqBlok?: T | FaqBlokBlockSelect<T>;
         locatieUitgelicht?: T | LocatieUitgelichtBlockSelect<T>;
+        kaartenSlider?: T | KaartenSliderBlockSelect<T>;
+        stappenPlan?: T | StappenPlanBlockSelect<T>;
+        cijfersRij?: T | CijfersRijBlockSelect<T>;
+        doelgroepenBlok?: T | DoelgroepenBlokBlockSelect<T>;
+        appPromo?: T | AppPromoBlokBlockSelect<T>;
       };
   meta?:
     | T
@@ -1939,6 +2053,107 @@ export interface LocatieUitgelichtBlockSelect<T extends boolean = true> {
   titel?: T;
   locatie?: T;
   tekst?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "KaartenSliderBlock_select".
+ */
+export interface KaartenSliderBlockSelect<T extends boolean = true> {
+  titel?: T;
+  kaarten?:
+    | T
+    | {
+        afbeelding?: T;
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StappenPlanBlock_select".
+ */
+export interface StappenPlanBlockSelect<T extends boolean = true> {
+  titel?: T;
+  stappen?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CijfersRijBlock_select".
+ */
+export interface CijfersRijBlockSelect<T extends boolean = true> {
+  cijfers?:
+    | T
+    | {
+        waarde?: T;
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DoelgroepenBlokBlock_select".
+ */
+export interface DoelgroepenBlokBlockSelect<T extends boolean = true> {
+  titel?: T;
+  groepen?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        punten?:
+          | T
+          | {
+              tekst?: T;
+              id?: T;
+            };
+        link?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AppPromoBlokBlock_select".
+ */
+export interface AppPromoBlokBlockSelect<T extends boolean = true> {
+  titel?: T;
+  subtitel?: T;
+  afbeelding?: T;
+  features?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  knoppen?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

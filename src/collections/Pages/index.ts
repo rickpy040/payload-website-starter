@@ -11,6 +11,11 @@ import { UspRij } from '@/blocks/UspRij/config'
 import { Citaat } from '@/blocks/Citaat/config'
 import { FaqBlok } from '@/blocks/FaqBlok/config'
 import { LocatieUitgelicht } from '@/blocks/LocatieUitgelicht/config'
+import { KaartenSlider } from '@/blocks/KaartenSlider/config'
+import { StappenPlan } from '@/blocks/StappenPlan/config'
+import { CijfersRij } from '@/blocks/CijfersRij/config'
+import { DoelgroepenBlok } from '@/blocks/DoelgroepenBlok/config'
+import { AppPromoBlok } from '@/blocks/AppPromoBlok/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -86,6 +91,11 @@ export const Pages: CollectionConfig<'pages'> = {
                 Citaat,
                 FaqBlok,
                 LocatieUitgelicht,
+                KaartenSlider,
+                StappenPlan,
+                CijfersRij,
+                DoelgroepenBlok,
+                AppPromoBlok,
               ],
               required: true,
               admin: {

@@ -11,6 +11,11 @@ import { UspRijComponent } from '@/blocks/UspRij/Component'
 import { CitaatComponent } from '@/blocks/Citaat/Component'
 import { FaqBlokComponent } from '@/blocks/FaqBlok/Component'
 import { LocatieUitgelichtComponent } from '@/blocks/LocatieUitgelicht/Component'
+import { KaartenSliderComponent } from '@/blocks/KaartenSlider/Component'
+import { StappenPlanComponent } from '@/blocks/StappenPlan/Component'
+import { CijfersRijComponent } from '@/blocks/CijfersRij/Component'
+import { DoelgroepenBlokComponent } from '@/blocks/DoelgroepenBlok/Component'
+import { AppPromoBlokComponent } from '@/blocks/AppPromoBlok/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -22,6 +27,11 @@ const blockComponents = {
   citaat: CitaatComponent,
   faqBlok: FaqBlokComponent,
   locatieUitgelicht: LocatieUitgelichtComponent,
+  kaartenSlider: KaartenSliderComponent,
+  stappenPlan: StappenPlanComponent,
+  cijfersRij: CijfersRijComponent,
+  doelgroepenBlok: DoelgroepenBlokComponent,
+  appPromo: AppPromoBlokComponent,
 }
 
 export const RenderBlocks: React.FC<{
