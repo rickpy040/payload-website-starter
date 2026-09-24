@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Location } from '@/payload-types'
 import { Brandmark } from './Brandmark'
-import { fmtPrice, getAvailabilityStatus } from './availability'
+import { fmtPrice, getAvailabilityStatus, hasPrice } from './availability'
 import { AvailabilityBadge } from './AvailabilityBadge'
 
 function pad(n: number) {
@@ -164,7 +164,7 @@ export function LocationBookingWidget({ location }: { location: Location }) {
           <button
             type="button"
             onClick={reserveerNu}
-            disabled={loading}
+            disabled={loading || !hasPrice(displayPrice)}
             className="flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-full bg-py-oranje text-[16px] font-bold text-white transition-colors hover:bg-py-oranje-hi disabled:opacity-60"
           >
             {loading ? 'Even checken…' : 'Reserveer nu'}
@@ -180,7 +180,13 @@ export function LocationBookingWidget({ location }: { location: Location }) {
       <div className="rounded-[20px] p-6 shadow-[inset_0_0_0_1px_var(--py-line)]">
         <div className="flex items-baseline justify-between gap-3">
           <span className="text-[26px] font-bold tracking-tight text-py-blauw">
-            € {fmtPrice(displayPrice)} <span className="text-[13px] font-normal text-py-grijs-txt">/uur</span>
+            {hasPrice(displayPrice) ? (
+              <>
+                € {fmtPrice(displayPrice)} <span className="text-[13px] font-normal text-py-grijs-txt">/uur</span>
+              </>
+            ) : (
+              <span className="text-[16px] font-normal text-py-grijs-txt">Prijs op aanvraag</span>
+            )}
           </span>
           {location.spotsFree != null && location.spotsTotal != null ? (
             <span className="text-[13.5px] text-py-grijs-txt">

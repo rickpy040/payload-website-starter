@@ -2,8 +2,26 @@
 
 import React, { useEffect, useRef } from 'react'
 import type { Location } from '@/payload-types'
-import { fmtPrice } from './availability'
+import { fmtPrice, hasPrice } from './availability'
 import 'leaflet/dist/leaflet.css'
+
+function priceLabel(price: number | null | undefined): string {
+  return hasPrice(price) ? `&euro;&nbsp;${fmtPrice(price)}` : 'n.b.'
+}
+
+function buildIcon(L: typeof import('leaflet'), price: number | null | undefined, active: boolean) {
+  const bg = active ? '#32B9CD' : '#1A3580'
+  const fg = active ? '#14285F' : '#FFFFFF'
+  return L.divIcon({
+    className: '',
+    iconSize: [76, 42],
+    iconAnchor: [38, 42],
+    html:
+      `<div style="display:flex;flex-direction:column;align-items:center">` +
+      `<div style="height:30px;padding:0 12px;border-radius:100px;background:${bg};color:${fg};box-shadow:0 0 0 2px #fff,0 4px 10px rgba(20,40,95,0.22);display:flex;align-items:center;font:700 13px Ubuntu,Arial,sans-serif;white-space:nowrap">${priceLabel(price)}</div>` +
+      `<div style="width:2px;height:9px;background:${bg}"></div></div>`,
+  })
+}
 
 export function LocationsMap({
   locations,
@@ -40,23 +58,9 @@ export function LocationsMap({
       }).addTo(map)
       L.control.zoom({ position: 'topright' }).addTo(map)
 
-      function pinIcon(price: number, active: boolean) {
-        const bg = active ? '#32B9CD' : '#1A3580'
-        const fg = active ? '#14285F' : '#FFFFFF'
-        return L.divIcon({
-          className: '',
-          iconSize: [76, 42],
-          iconAnchor: [38, 42],
-          html:
-            `<div style="display:flex;flex-direction:column;align-items:center">` +
-            `<div style="height:30px;padding:0 12px;border-radius:100px;background:${bg};color:${fg};box-shadow:0 0 0 2px #fff,0 4px 10px rgba(20,40,95,0.22);display:flex;align-items:center;font:700 13px Ubuntu,Arial,sans-serif;white-space:nowrap">&euro;&nbsp;${fmtPrice(price)}</div>` +
-            `<div style="width:2px;height:9px;background:${bg}"></div></div>`,
-        })
-      }
-
       withCoords.forEach((loc) => {
         const marker = L.marker([loc.coordinates[1], loc.coordinates[0]], {
-          icon: pinIcon(loc.pricePerHour, loc.slug === activeSlug),
+          icon: buildIcon(L, loc.pricePerHour, loc.slug === activeSlug),
           title: loc.name,
         }).addTo(map)
         marker.on('click', () => onSelect?.(loc.slug))
@@ -80,17 +84,7 @@ export function LocationsMap({
       Object.entries(markersRef.current).forEach(([slug, marker]) => {
         const loc = withCoords.find((l) => l.slug === slug)
         if (!loc) return
-        marker.setIcon(
-          L.divIcon({
-            className: '',
-            iconSize: [76, 42],
-            iconAnchor: [38, 42],
-            html:
-              `<div style="display:flex;flex-direction:column;align-items:center">` +
-              `<div style="height:30px;padding:0 12px;border-radius:100px;background:${slug === activeSlug ? '#32B9CD' : '#1A3580'};color:${slug === activeSlug ? '#14285F' : '#FFFFFF'};box-shadow:0 0 0 2px #fff,0 4px 10px rgba(20,40,95,0.22);display:flex;align-items:center;font:700 13px Ubuntu,Arial,sans-serif;white-space:nowrap">&euro;&nbsp;${fmtPrice(loc.pricePerHour)}</div>` +
-              `<div style="width:2px;height:9px;background:${slug === activeSlug ? '#32B9CD' : '#1A3580'}"></div></div>`,
-          }),
-        )
+        marker.setIcon(buildIcon(L, loc.pricePerHour, slug === activeSlug))
       })
       const active = withCoords.find((l) => l.slug === activeSlug)
       if (active && mapRef.current) {

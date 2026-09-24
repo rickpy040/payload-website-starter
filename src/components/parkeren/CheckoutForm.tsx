@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import type { Location } from '@/payload-types'
 import { Pin } from './Brandmark'
-import { fmtPrice } from './availability'
+import { fmtPrice, hasPrice } from './availability'
 import { locationCityLabel } from './LocationCard'
 
 const PAY_OPTIONS = [
@@ -42,7 +42,7 @@ export function CheckoutForm({
 
   const when = fmtWhen(arrival, departure)
   const rate = price ?? location.pricePerHour
-  const total = when ? rate * when.hours : rate
+  const total = hasPrice(rate) && when ? rate * when.hours : rate
   const addressLine = [location.address?.street, location.address?.cityName].filter(Boolean).join(', ')
 
   function confirmAndPay() {
@@ -170,7 +170,9 @@ export function CheckoutForm({
         <div className="mt-4 flex flex-col gap-2 border-t border-py-line pt-4 text-[14.5px] text-py-grijs-txt">
           <div className="flex items-baseline justify-between">
             <span>Tarief</span>
-            <b className="font-semibold text-py-blauw">€ {fmtPrice(rate)} / uur</b>
+            <b className="font-semibold text-py-blauw">
+              {hasPrice(rate) ? `€ ${fmtPrice(rate)} / uur` : 'Op aanvraag'}
+            </b>
           </div>
           {when && (
             <div className="flex items-baseline justify-between">
@@ -181,12 +183,14 @@ export function CheckoutForm({
         </div>
         <div className="mt-4 flex items-baseline justify-between border-t border-py-line pt-4">
           <span className="text-py-grijs-txt">Totaal</span>
-          <b className="text-[25px] font-bold tracking-tight text-py-blauw">€ {fmtPrice(total)}</b>
+          <b className="text-[25px] font-bold tracking-tight text-py-blauw">
+            {hasPrice(total) ? `€ ${fmtPrice(total)}` : '—'}
+          </b>
         </div>
         <button
           type="button"
           onClick={confirmAndPay}
-          disabled={submitting}
+          disabled={submitting || !hasPrice(rate)}
           className="mt-5 flex min-h-[56px] w-full items-center justify-center rounded-full bg-py-oranje text-[15.5px] font-bold text-white transition-colors hover:bg-py-oranje-hi disabled:opacity-60"
         >
           {submitting ? 'Even geduld…' : 'Bevestig en betaal'}

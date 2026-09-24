@@ -3,7 +3,7 @@ import Link from 'next/link'
 import type { Location } from '@/payload-types'
 import { Pin } from './Brandmark'
 import { AvailabilityBadge } from './AvailabilityBadge'
-import { getAvailabilityStatus, fmtPrice } from './availability'
+import { getAvailabilityStatus, fmtPrice, hasPrice } from './availability'
 import { cn } from '@/utilities/ui'
 
 const CITY_LABEL: Record<Location['city'], string> = {
@@ -60,8 +60,14 @@ export function LocationCard({
       </span>
       <AvailabilityBadge status={status} short className="hidden sm:inline-flex" />
       <span className="text-right font-bold tracking-tight text-py-blauw">
-        <span className="text-[20px]">€ {fmtPrice(location.pricePerHour)}</span>
-        <span className="block text-xs font-normal text-py-grijs-txt">/uur</span>
+        {hasPrice(location.pricePerHour) ? (
+          <>
+            <span className="text-[20px]">€ {fmtPrice(location.pricePerHour)}</span>
+            <span className="block text-xs font-normal text-py-grijs-txt">/uur</span>
+          </>
+        ) : (
+          <span className="text-sm font-normal text-py-grijs-txt">Prijs op aanvraag</span>
+        )}
       </span>
     </Link>
   )

@@ -28,3 +28,8 @@ export function getAvailabilityStatus(
 export function fmtPrice(n: number): string {
   return n.toFixed(2).replace('.', ',')
 }
+
+/** Locations created before pricePerHour existed (or left incomplete) may have no price yet. */
+export function hasPrice(n: number | null | undefined): n is number {
+  return typeof n === 'number'
+}
