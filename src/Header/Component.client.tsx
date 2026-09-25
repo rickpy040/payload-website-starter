@@ -17,7 +17,10 @@ interface HeaderClientProps {
 /** The prototype header (`PYHeader`): logo, menu, phone, account icon and the reserve button. */
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
+  // The mobile menu stays open only on the page it was opened on, so it
+  // closes on navigation without an effect.
+  const [openOp, setOpenOp] = useState<string | null>(null)
+  const open = openOp === pathname
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -26,8 +29,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  useEffect(() => setOpen(false), [pathname])
 
   const items = (data?.navItems ?? [])
     .map(({ link }) => ({
@@ -89,7 +90,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         <button
           type="button"
           className="py-menu-button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpenOp(open ? null : pathname)}
           aria-expanded={open}
           aria-label="Menu"
         >

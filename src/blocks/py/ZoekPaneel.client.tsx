@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, useSyncExternalStore } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { Icon } from '@/components/py/Icon'
 import { PyButton } from '@/components/py/Button'
@@ -19,6 +19,14 @@ export type ZoekbalkData = {
   hint?: string | null
 }
 
+const volgUrl = (onChange: () => void) => {
+  window.addEventListener('popstate', onChange)
+  return () => window.removeEventListener('popstate', onChange)
+}
+const stadUitUrl = () => new URLSearchParams(window.location.search).get('stad') ?? ''
+// No URL on the server (the page is static): start empty, React fills it in after hydration.
+const stadOpServer = () => ''
+
 export function ZoekPaneel({
   zoekbalk,
   compact = false,
@@ -27,17 +35,15 @@ export function ZoekPaneel({
   compact?: boolean
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   const doel = zoekbalk?.doel || '/locaties'
-  const [stad, setStad] = useState('')
+  // On the target page itself, start from the city in the URL (?stad=…)
+  // until the visitor types something.
+  const urlStad = useSyncExternalStore(volgUrl, stadUitUrl, stadOpServer)
+  const [invoer, setInvoer] = useState<string | null>(null)
+  const stad = invoer ?? (pathname === doel ? urlStad : '')
   const [wanneer, setWanneer] = useState(zoekbalk?.wanneerWaarde ?? 'Vandaag 09:00 - 17:00')
   const [gezocht, setGezocht] = useState<string | null>(null)
-
-  // On the target page itself, start from the city in the URL (?stad=…).
-  useEffect(() => {
-    if (window.location.pathname !== doel) return
-    const uitUrl = new URLSearchParams(window.location.search).get('stad')
-    if (uitUrl) setStad(uitUrl)
-  }, [doel])
 
   const zoek = (event: React.FormEvent) => {
     event.preventDefault()
@@ -65,7 +71,7 @@ export function ZoekPaneel({
         </span>
         <input
           value={stad}
-          onChange={(e) => setStad(e.target.value)}
+          onChange={(e) => setInvoer(e.target.value)}
           placeholder={zoekbalk?.waarPlaceholder ?? 'Stad, garage of adres'}
         />
       </label>
