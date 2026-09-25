@@ -216,6 +216,22 @@ export interface Page {
     media?: (number | null) | Media;
   };
   layout: (
+    | HomeHeroBlock
+    | PaginaHeroBlock
+    | PassHeroBlock
+    | ProductKeuzeBlock
+    | LocatieOverzichtBlock
+    | EvenementenOverzichtBlock
+    | InfoBandenBlock
+    | StappenSectieBlock
+    | VoordelenSplitBlock
+    | VerhaalKolommenBlock
+    | StedenStripBlock
+    | AppCalloutBlock
+    | BannerCtaBlock
+    | FaqAccordeonBlock
+    | FormulierSectieBlock
+    | WaardekaartBestellenBlock
     | CallToActionBlock
     | ContentBlock
     | MediaBlock
@@ -475,51 +491,339 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
+ * via the `definition` "HomeHeroBlock".
  */
-export interface CallToActionBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  links?:
+export interface HomeHeroBlock {
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  /**
+   * Zoeken stuurt de bezoeker naar de doelpagina met ?stad=… in de URL. Een Locatie-overzicht op die pagina filtert daar direct op.
+   */
+  zoekbalk?: {
+    waarLabel?: string | null;
+    waarPlaceholder?: string | null;
+    wanneerLabel?: string | null;
+    wanneerWaarde?: string | null;
+    knopLabel?: string | null;
+    doel?: string | null;
+    /**
+     * {stad} wordt vervangen door wat de bezoeker intypte.
+     */
+    hint?: string | null;
+  };
+  snelleSteden?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
+        naam: string;
+        id?: string | null;
+      }[]
+    | null;
+  afbeelding?: (number | null) | Media;
+  /**
+   * Zonder "EUR", bv. "5" of "2,50"
+   */
+  prijs?: string | null;
+  prijsEenheid?: string | null;
+  ticketLabel?: string | null;
+  ticketTitel?: string | null;
+  ticketTijd?: string | null;
+  statWaarde?: string | null;
+  statLabel?: string | null;
+  cijfers?:
+    | {
+        waarde: string;
+        label: string;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'cta';
+  blockType: 'homeHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PaginaHeroBlock".
+ */
+export interface PaginaHeroBlock {
+  stijl?: ('licht' | 'aqua' | 'zacht' | 'warm' | 'evenementen') | null;
+  visual?: ('kaart' | 'paneel' | 'cijfers' | 'dashboard' | 'evenementen' | 'afbeelding' | 'geen') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  knoppen?:
+    | {
+        label: string;
+        /**
+         * Bv. /locaties, https://…, tel:… of #anker
+         */
+        url: string;
+        stijl?: ('primary' | 'aqua' | 'outline' | 'ghost' | 'on-dark') | null;
+        icoon?:
+          | (
+              | 'geen'
+              | 'car'
+              | 'arrow'
+              | 'pin'
+              | 'calendar'
+              | 'clock'
+              | 'card'
+              | 'bolt'
+              | 'shield'
+              | 'ticket'
+              | 'wallet'
+              | 'phone'
+              | 'search'
+              | 'check'
+              | 'star'
+              | 'ev'
+              | 'map'
+              | 'info'
+              | 'trending'
+              | 'tag'
+              | 'user'
+            )
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  toonZoekbalk?: boolean | null;
+  /**
+   * Zoeken stuurt de bezoeker naar de doelpagina met ?stad=… in de URL. Een Locatie-overzicht op die pagina filtert daar direct op.
+   */
+  zoekbalk?: {
+    waarLabel?: string | null;
+    waarPlaceholder?: string | null;
+    wanneerLabel?: string | null;
+    wanneerWaarde?: string | null;
+    knopLabel?: string | null;
+    doel?: string | null;
+    /**
+     * {stad} wordt vervangen door wat de bezoeker intypte.
+     */
+    hint?: string | null;
+  };
+  afbeelding?: (number | null) | Media;
+  /**
+   * Blauw paneel: label + regels (waarde en uitleg). Kerncijfers: alleen de regels. Dashboard: label, grote waarde, staafjes en regels (alleen de uitleg wordt getoond, met een vinkje).
+   */
+  paneel?: {
+    /**
+     * Bv. "Abonnement in het kort" of "Live bezetting"
+     */
+    label?: string | null;
+    /**
+     * Bv. "83%"
+     */
+    waarde?: string | null;
+    /**
+     * Hoogtes in procenten, gescheiden door komma’s.
+     */
+    balken?: string | null;
+    regels?:
+      | {
+          /**
+           * Bv. "3 maanden" of "500k+"
+           */
+          waarde?: string | null;
+          label: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'paginaHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PassHeroBlock".
+ */
+export interface PassHeroBlock {
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  opties?:
+    | {
+        /**
+         * Bv. "10"; verschijnt groot op de kaart als "10x"
+         */
+        waarde: string;
+        /**
+         * Bv. "10x parkeren"
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  kaartLabel?: string | null;
+  kaartOndertitel?: string | null;
+  kaartTekst?: string | null;
+  /**
+   * Naam van een keuzelijst in een formulier op dezelfde pagina (bv. het ParkingPass-bestelformulier). De keuze hier en daar blijft gelijk. Leeg = niet koppelen.
+   */
+  koppelVeld?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'passHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductKeuzeBlock".
+ */
+export interface ProductKeuzeBlock {
+  linkLabel?: string | null;
+  producten?:
+    | {
+        icoon?:
+          | (
+              | 'car'
+              | 'arrow'
+              | 'pin'
+              | 'calendar'
+              | 'clock'
+              | 'card'
+              | 'bolt'
+              | 'shield'
+              | 'ticket'
+              | 'wallet'
+              | 'phone'
+              | 'search'
+              | 'check'
+              | 'star'
+              | 'ev'
+              | 'map'
+              | 'info'
+              | 'trending'
+              | 'tag'
+              | 'user'
+            )
+          | null;
+        titel: string;
+        tekst?: string | null;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productKeuze';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieOverzichtBlock".
+ */
+export interface LocatieOverzichtBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel?: string | null;
+  tekst?: string | null;
+  /**
+   * Bv. "Bekijk alle locaties"
+   */
+  actieLabel?: string | null;
+  actieUrl?: string | null;
+  bron?: ('alle' | 'abonnementen' | 'parkingpass' | 'handmatig') | null;
+  stad?: (number | null) | Steden;
+  /**
+   * Leeg = alles
+   */
+  maxAantal?: number | null;
+  locaties?: (number | Location)[] | null;
+  toonStadFilter?: boolean | null;
+  toonSortering?: boolean | null;
+  toonAantal?: boolean | null;
+  eersteUitgelicht?: boolean | null;
+  knopLabel?: string | null;
+  alleStedenLabel?: string | null;
+  /**
+   * {aantal} wordt het aantal; bij een gekozen stad volgt "in {stad}".
+   */
+  aantalTekst?: string | null;
+  legeTekst?: string | null;
+  /**
+   * Voor locaties zonder eigen foto. Worden om de beurt gebruikt.
+   */
+  standaardAfbeeldingen?: (number | Media)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'locatieOverzicht';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "steden".
+ */
+export interface Steden {
+  id: number;
+  naam: string;
+  /**
+   * Gebruikt in de URL: /parkeren/{url}
+   */
+  slug: string;
+  /**
+   * Verandert de H1 van "Parkeren in {naam}" naar "Parkeren in de {naam}"
+   */
+  isRegio?: boolean | null;
+  provincie?: string | null;
+  /**
+   * Alleen voor het centreren van de kaart, dit is geen locatie.
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  coordinaten?: [number, number] | null;
+  /**
+   * Sleep om te herordenen. Elke sectie kan uit staan door hem te verwijderen; niets hier is verplicht in een vaste volgorde.
+   */
+  secties?: (StadHeroBlock | StadLocatiesLijstBlock | ContentBlock | CitaatBlock | CallToActionBlock)[] | null;
+  /**
+   * Voor het oplossen van cid= redirects.
+   */
+  oudeCid?: number | null;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadHeroBlock".
+ */
+export interface StadHeroBlock {
+  /**
+   * Standaard: "Parkeren in {naam van de stad}"
+   */
+  titel?: string | null;
+  intro?: string | null;
+  afbeelding?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stadHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StadLocatiesLijstBlock".
+ */
+export interface StadLocatiesLijstBlock {
+  legeMelding?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stadLocatiesLijst';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -573,258 +877,6 @@ export interface ContentBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock".
- */
-export interface MediaBlock {
-  media: number | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock".
- */
-export interface ArchiveBlock {
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'posts' | null;
-  categories?: (number | Category)[] | null;
-  limit?: number | null;
-  selectedDocs?:
-    | {
-        relationTo: 'posts';
-        value: number | Post;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'archive';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock".
- */
-export interface FormBlock {
-  form: number | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'formBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms".
- */
-export interface Form {
-  id: number;
-  title: string;
-  fields?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
-          }
-        | {
-            message?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-      )[]
-    | null;
-  submitButtonLabel?: string | null;
-  confirmationType?: ('message' | 'redirect') | null;
-  confirmationMessage?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  redirect?: {
-    url: string;
-  };
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "UspRijBlock".
- */
-export interface UspRijBlock {
-  items?:
-    | {
-        titel: string;
-        tekst?: string | null;
-        icoon?: ('check' | 'clock' | 'shield' | 'car' | 'card' | 'bolt') | null;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'uspRij';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CitaatBlock".
  */
 export interface CitaatBlock {
@@ -838,37 +890,10 @@ export interface CitaatBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FaqBlokBlock".
+ * via the `definition` "CallToActionBlock".
  */
-export interface FaqBlokBlock {
-  titel?: string | null;
-  bron?: ('alles' | 'categorie' | 'handmatig') | null;
-  categorie?: (number | null) | FaqCategorieen;
-  vragen?: (number | Faq)[] | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'faqBlok';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq-categorieen".
- */
-export interface FaqCategorieen {
-  id: number;
-  naam: string;
-  slug: string;
-  volgorde?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq".
- */
-export interface Faq {
-  id: number;
-  question: string;
-  answer: {
+export interface CallToActionBlock {
+  richText?: {
     root: {
       type: string;
       children: {
@@ -882,19 +907,34 @@ export interface Faq {
       version: number;
     };
     [k: string]: unknown;
-  };
-  category?: ('algemeen' | 'betalen' | 'abonnementen' | 'reserveren' | 'zakelijk') | null;
-  /**
-   * Gebruikt door het FaqBlok op /veelgestelde-vragen en generieke paginas.
-   */
-  categorie?: (number | null) | FaqCategorieen;
-  /**
-   * Leeg laten = geldt voor alle locaties
-   */
-  locations?: (number | Location)[] | null;
-  volgorde?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1049,6 +1089,23 @@ export interface Location {
   waardekaart?: boolean | null;
   strippenkaart?: boolean | null;
   /**
+   * Toont deze locatie in een Locatie-overzicht met bron "Abonnementslocaties", zoals op /abonnementen.
+   */
+  abonnementen?: boolean | null;
+  /**
+   * Toont deze locatie bij de ParkingPass-locaties en in het ParkingPass-bestelformulier.
+   */
+  parkingPass?: boolean | null;
+  /**
+   * De kleine labels op de kaart in een Locatie-overzicht, bv. "Reserveerbaar", "24/7", "Events". Leeg = automatisch uit de velden hierboven.
+   */
+  kaartLabels?:
+    | {
+        tekst: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Hoe kom je naar binnen: slagboom, kentekenherkenning, ticket.
    */
   inrit?: {
@@ -1157,67 +1214,6 @@ export interface Location {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "steden".
- */
-export interface Steden {
-  id: number;
-  naam: string;
-  /**
-   * Gebruikt in de URL: /parkeren/{url}
-   */
-  slug: string;
-  /**
-   * Verandert de H1 van "Parkeren in {naam}" naar "Parkeren in de {naam}"
-   */
-  isRegio?: boolean | null;
-  provincie?: string | null;
-  /**
-   * Alleen voor het centreren van de kaart, dit is geen locatie.
-   *
-   * @minItems 2
-   * @maxItems 2
-   */
-  coordinaten?: [number, number] | null;
-  /**
-   * Sleep om te herordenen. Elke sectie kan uit staan door hem te verwijderen; niets hier is verplicht in een vaste volgorde.
-   */
-  secties?: (StadHeroBlock | StadLocatiesLijstBlock | ContentBlock | CitaatBlock | CallToActionBlock)[] | null;
-  /**
-   * Voor het oplossen van cid= redirects.
-   */
-  oudeCid?: number | null;
-  publishedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "StadHeroBlock".
- */
-export interface StadHeroBlock {
-  /**
-   * Standaard: "Parkeren in {naam van de stad}"
-   */
-  titel?: string | null;
-  intro?: string | null;
-  afbeelding?: (number | null) | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'stadHero';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "StadLocatiesLijstBlock".
- */
-export interface StadLocatiesLijstBlock {
-  legeMelding?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'stadLocatiesLijst';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pois".
  */
 export interface Pois {
@@ -1272,6 +1268,66 @@ export interface PoiHeroBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'poiHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlokBlock".
+ */
+export interface FaqBlokBlock {
+  titel?: string | null;
+  bron?: ('alles' | 'categorie' | 'handmatig') | null;
+  categorie?: (number | null) | FaqCategorieen;
+  vragen?: (number | Faq)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqBlok';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq-categorieen".
+ */
+export interface FaqCategorieen {
+  id: number;
+  naam: string;
+  slug: string;
+  volgorde?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category?: ('algemeen' | 'betalen' | 'abonnementen' | 'reserveren' | 'zakelijk') | null;
+  /**
+   * Gebruikt door het FaqBlok op /veelgestelde-vragen en generieke paginas.
+   */
+  categorie?: (number | null) | FaqCategorieen;
+  /**
+   * Leeg laten = geldt voor alle locaties
+   */
+  locations?: (number | Location)[] | null;
+  volgorde?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1363,6 +1419,709 @@ export interface LocatieFaqBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'locatieFaq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EvenementenOverzichtBlock".
+ */
+export interface EvenementenOverzichtBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel?: string | null;
+  tekst?: string | null;
+  toonFilters?: boolean | null;
+  toonAantal?: boolean | null;
+  /**
+   * Leeg = alles
+   */
+  maxAantal?: number | null;
+  knopLabel?: string | null;
+  alleStedenLabel?: string | null;
+  alleTypesLabel?: string | null;
+  aantalTekst?: string | null;
+  legeTekst?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'evenementenOverzicht';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "InfoBandenBlock".
+ */
+export interface InfoBandenBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  stijl?: ('banden' | 'partner') | null;
+  kaarten?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'infoBanden';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StappenSectieBlock".
+ */
+export interface StappenSectieBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  stijl?: ('kaarten' | 'flow') | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel?: string | null;
+  tekst?: string | null;
+  /**
+   * Alleen bij "Kaarten": toont "Stap 01". Leeg = alleen het nummer.
+   */
+  stapLabel?: string | null;
+  stappen?:
+    | {
+        /**
+         * Bv. "01"
+         */
+        nummer?: string | null;
+        titel: string;
+        tekst?: string | null;
+        uitgelicht?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stappenSectie';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VoordelenSplitBlock".
+ */
+export interface VoordelenSplitBlock {
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  voordelen?:
+    | {
+        icoon?:
+          | (
+              | 'car'
+              | 'arrow'
+              | 'pin'
+              | 'calendar'
+              | 'clock'
+              | 'card'
+              | 'bolt'
+              | 'shield'
+              | 'ticket'
+              | 'wallet'
+              | 'phone'
+              | 'search'
+              | 'check'
+              | 'star'
+              | 'ev'
+              | 'map'
+              | 'info'
+              | 'trending'
+              | 'tag'
+              | 'user'
+            )
+          | null;
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'voordelenSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VerhaalKolommenBlock".
+ */
+export interface VerhaalKolommenBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  kolommen?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        knopLabel?: string | null;
+        knopUrl?: string | null;
+        stijl?: ('primary' | 'aqua' | 'outline' | 'ghost' | 'on-dark') | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'verhaalKolommen';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StedenStripBlock".
+ */
+export interface StedenStripBlock {
+  bron?: ('automatisch' | 'handmatig') | null;
+  maxAantal?: number | null;
+  linkNaar?: ('locaties' | 'stadspagina') | null;
+  steden?:
+    | {
+        naam: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stedenStrip';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AppCalloutBlock".
+ */
+export interface AppCalloutBlock {
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  features?:
+    | {
+        icoon?:
+          | (
+              | 'car'
+              | 'arrow'
+              | 'pin'
+              | 'calendar'
+              | 'clock'
+              | 'card'
+              | 'bolt'
+              | 'shield'
+              | 'ticket'
+              | 'wallet'
+              | 'phone'
+              | 'search'
+              | 'check'
+              | 'star'
+              | 'ev'
+              | 'map'
+              | 'info'
+              | 'trending'
+              | 'tag'
+              | 'user'
+            )
+          | null;
+        tekst: string;
+        id?: string | null;
+      }[]
+    | null;
+  knoppen?:
+    | {
+        label: string;
+        /**
+         * Bv. /locaties, https://…, tel:… of #anker
+         */
+        url: string;
+        stijl?: ('primary' | 'aqua' | 'outline' | 'ghost' | 'on-dark') | null;
+        icoon?:
+          | (
+              | 'geen'
+              | 'car'
+              | 'arrow'
+              | 'pin'
+              | 'calendar'
+              | 'clock'
+              | 'card'
+              | 'bolt'
+              | 'shield'
+              | 'ticket'
+              | 'wallet'
+              | 'phone'
+              | 'search'
+              | 'check'
+              | 'star'
+              | 'ev'
+              | 'map'
+              | 'info'
+              | 'trending'
+              | 'tag'
+              | 'user'
+            )
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  telefoon?: {
+    zoekTekst?: string | null;
+    label?: string | null;
+    titel?: string | null;
+    tekst?: string | null;
+    knop?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'appCallout';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerCtaBlock".
+ */
+export interface BannerCtaBlock {
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  actie?: ('knop' | 'inschrijven') | null;
+  knopLabel?: string | null;
+  knopUrl?: string | null;
+  stijl?: ('primary' | 'aqua' | 'outline' | 'ghost' | 'on-dark') | null;
+  icoon?:
+    | (
+        | 'geen'
+        | 'car'
+        | 'arrow'
+        | 'pin'
+        | 'calendar'
+        | 'clock'
+        | 'card'
+        | 'bolt'
+        | 'shield'
+        | 'ticket'
+        | 'wallet'
+        | 'phone'
+        | 'search'
+        | 'check'
+        | 'star'
+        | 'ev'
+        | 'map'
+        | 'info'
+        | 'trending'
+        | 'tag'
+        | 'user'
+      )
+    | null;
+  inschrijven?: {
+    placeholder?: string | null;
+    knopLabel?: string | null;
+    /**
+     * Inzendingen komen in dit formulier terecht (Formulieren → Inzendingen). Het formulier heeft een e-mailveld met de naam "email" nodig.
+     */
+    formulier?: (number | null) | Form;
+    bedankt?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'bannerCta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: number;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            /**
+             * Lichte voorbeeldtekst in het lege veld, bv. "jij@voorbeeld.nl".
+             */
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Lichte voorbeeldtekst in het lege veld, bv. "jij@voorbeeld.nl".
+             */
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Lichte voorbeeldtekst in het lege veld, bv. "jij@voorbeeld.nl".
+             */
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            placeholder?: string | null;
+            bron?: ('alle' | 'abonnementen' | 'parkingpass') | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'locatieKeuze';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    url: string;
+  };
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqAccordeonBlock".
+ */
+export interface FaqAccordeonBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel?: string | null;
+  tekst?: string | null;
+  bron?: ('handmatig' | 'collectie') | null;
+  vragen?:
+    | {
+        vraag: string;
+        antwoord: string;
+        id?: string | null;
+      }[]
+    | null;
+  categorie?: (number | null) | FaqCategorieen;
+  maxAantal?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqAccordeon';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormulierSectieBlock".
+ */
+export interface FormulierSectieBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  locatieLabels?: ('geen' | 'abonnementen' | 'parkingpass') | null;
+  /**
+   * Velden, knoptekst en bevestiging bewerk je in Formulieren.
+   */
+  formulier: number | Form;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formulierSectie';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WaardekaartBestellenBlock".
+ */
+export interface WaardekaartBestellenBlock {
+  achtergrond?: ('wit' | 'papier') | null;
+  /**
+   * Optioneel. Maakt deze sectie bereikbaar via #anker, bv. een knop met URL "#abonnement-aanvragen".
+   */
+  anker?: string | null;
+  /**
+   * Zet woorden tussen *sterretjes* om ze cursief te tonen, zoals in het prototype.
+   */
+  titel: string;
+  tekst?: string | null;
+  infoKaarten?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  wizard?: {
+    stap1?: string | null;
+    stap2?: string | null;
+    stap3?: string | null;
+    keuzeTitel?: string | null;
+    /**
+     * Gescheiden door komma’s.
+     */
+    bedragen?: string | null;
+    standaardBedrag?: string | null;
+    aantalLabel?: string | null;
+    totaalLabel?: string | null;
+    volgendeLabel?: string | null;
+    gegevensTitel?: string | null;
+    terugLabel?: string | null;
+    bevestigLabel?: string | null;
+    succesTitel?: string | null;
+    /**
+     * Gebruik {aantal}, {bedrag}, {totaal} en {email}.
+     */
+    succesTekst?: string | null;
+  };
+  /**
+   * Bestellingen komen als inzending in dit formulier (velden: bedrag, aantal, totaal, bedrijfsnaam, contactpersoon, email, kvk). Leeg = alleen de bevestiging tonen.
+   */
+  formulier?: (number | null) | Form;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'waardekaartBestellen';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  media: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'posts' | null;
+  categories?: (number | Category)[] | null;
+  limit?: number | null;
+  selectedDocs?:
+    | {
+        relationTo: 'posts';
+        value: number | Post;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock".
+ */
+export interface FormBlock {
+  form: number | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UspRijBlock".
+ */
+export interface UspRijBlock {
+  items?:
+    | {
+        titel: string;
+        tekst?: string | null;
+        icoon?: ('check' | 'clock' | 'shield' | 'car' | 'card' | 'bolt') | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'uspRij';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1531,14 +2290,26 @@ export interface Evenementen {
   naam: string;
   slug: string;
   /**
+   * Korte regel onder de naam op de evenementkaart, bv. "Officieel parkeerpartner van PSV".
+   */
+  tagline?: string | null;
+  /**
    * Bv. Festival of Sport
    */
   soort?: string | null;
+  /**
+   * Stad op de kaart en in het stadsfilter. Leeg = de stad van de eerste parkeerlocatie.
+   */
+  plaats?: string | null;
   kleur?: ('orange' | 'blue' | 'aqua') | null;
   datums?: string | null;
   afbeelding?: (number | null) | Media;
   vanafPrijs?: string | null;
   locaties: (number | Location)[];
+  /**
+   * Bv. een campagnepagina (/evenementen/glow) of een externe ticketlink. Leeg = de pagina van de eerste parkeerlocatie.
+   */
+  link?: string | null;
   publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1891,6 +2662,22 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        homeHero?: T | HomeHeroBlockSelect<T>;
+        paginaHero?: T | PaginaHeroBlockSelect<T>;
+        passHero?: T | PassHeroBlockSelect<T>;
+        productKeuze?: T | ProductKeuzeBlockSelect<T>;
+        locatieOverzicht?: T | LocatieOverzichtBlockSelect<T>;
+        evenementenOverzicht?: T | EvenementenOverzichtBlockSelect<T>;
+        infoBanden?: T | InfoBandenBlockSelect<T>;
+        stappenSectie?: T | StappenSectieBlockSelect<T>;
+        voordelenSplit?: T | VoordelenSplitBlockSelect<T>;
+        verhaalKolommen?: T | VerhaalKolommenBlockSelect<T>;
+        stedenStrip?: T | StedenStripBlockSelect<T>;
+        appCallout?: T | AppCalloutBlockSelect<T>;
+        bannerCta?: T | BannerCtaBlockSelect<T>;
+        faqAccordeon?: T | FaqAccordeonBlockSelect<T>;
+        formulierSectie?: T | FormulierSectieBlockSelect<T>;
+        waardekaartBestellen?: T | WaardekaartBestellenBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1920,6 +2707,414 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HomeHeroBlock_select".
+ */
+export interface HomeHeroBlockSelect<T extends boolean = true> {
+  titel?: T;
+  tekst?: T;
+  zoekbalk?:
+    | T
+    | {
+        waarLabel?: T;
+        waarPlaceholder?: T;
+        wanneerLabel?: T;
+        wanneerWaarde?: T;
+        knopLabel?: T;
+        doel?: T;
+        hint?: T;
+      };
+  snelleSteden?:
+    | T
+    | {
+        naam?: T;
+        id?: T;
+      };
+  afbeelding?: T;
+  prijs?: T;
+  prijsEenheid?: T;
+  ticketLabel?: T;
+  ticketTitel?: T;
+  ticketTijd?: T;
+  statWaarde?: T;
+  statLabel?: T;
+  cijfers?:
+    | T
+    | {
+        waarde?: T;
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PaginaHeroBlock_select".
+ */
+export interface PaginaHeroBlockSelect<T extends boolean = true> {
+  stijl?: T;
+  visual?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  knoppen?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        stijl?: T;
+        icoon?: T;
+        id?: T;
+      };
+  toonZoekbalk?: T;
+  zoekbalk?:
+    | T
+    | {
+        waarLabel?: T;
+        waarPlaceholder?: T;
+        wanneerLabel?: T;
+        wanneerWaarde?: T;
+        knopLabel?: T;
+        doel?: T;
+        hint?: T;
+      };
+  afbeelding?: T;
+  paneel?:
+    | T
+    | {
+        label?: T;
+        waarde?: T;
+        balken?: T;
+        regels?:
+          | T
+          | {
+              waarde?: T;
+              label?: T;
+              id?: T;
+            };
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PassHeroBlock_select".
+ */
+export interface PassHeroBlockSelect<T extends boolean = true> {
+  titel?: T;
+  tekst?: T;
+  opties?:
+    | T
+    | {
+        waarde?: T;
+        label?: T;
+        id?: T;
+      };
+  kaartLabel?: T;
+  kaartOndertitel?: T;
+  kaartTekst?: T;
+  koppelVeld?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductKeuzeBlock_select".
+ */
+export interface ProductKeuzeBlockSelect<T extends boolean = true> {
+  linkLabel?: T;
+  producten?:
+    | T
+    | {
+        icoon?: T;
+        titel?: T;
+        tekst?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LocatieOverzichtBlock_select".
+ */
+export interface LocatieOverzichtBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  actieLabel?: T;
+  actieUrl?: T;
+  bron?: T;
+  stad?: T;
+  maxAantal?: T;
+  locaties?: T;
+  toonStadFilter?: T;
+  toonSortering?: T;
+  toonAantal?: T;
+  eersteUitgelicht?: T;
+  knopLabel?: T;
+  alleStedenLabel?: T;
+  aantalTekst?: T;
+  legeTekst?: T;
+  standaardAfbeeldingen?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EvenementenOverzichtBlock_select".
+ */
+export interface EvenementenOverzichtBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  toonFilters?: T;
+  toonAantal?: T;
+  maxAantal?: T;
+  knopLabel?: T;
+  alleStedenLabel?: T;
+  alleTypesLabel?: T;
+  aantalTekst?: T;
+  legeTekst?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "InfoBandenBlock_select".
+ */
+export interface InfoBandenBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  stijl?: T;
+  kaarten?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StappenSectieBlock_select".
+ */
+export interface StappenSectieBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  stijl?: T;
+  titel?: T;
+  tekst?: T;
+  stapLabel?: T;
+  stappen?:
+    | T
+    | {
+        nummer?: T;
+        titel?: T;
+        tekst?: T;
+        uitgelicht?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VoordelenSplitBlock_select".
+ */
+export interface VoordelenSplitBlockSelect<T extends boolean = true> {
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  voordelen?:
+    | T
+    | {
+        icoon?: T;
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VerhaalKolommenBlock_select".
+ */
+export interface VerhaalKolommenBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  kolommen?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        knopLabel?: T;
+        knopUrl?: T;
+        stijl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StedenStripBlock_select".
+ */
+export interface StedenStripBlockSelect<T extends boolean = true> {
+  bron?: T;
+  maxAantal?: T;
+  linkNaar?: T;
+  steden?:
+    | T
+    | {
+        naam?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AppCalloutBlock_select".
+ */
+export interface AppCalloutBlockSelect<T extends boolean = true> {
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  features?:
+    | T
+    | {
+        icoon?: T;
+        tekst?: T;
+        id?: T;
+      };
+  knoppen?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        stijl?: T;
+        icoon?: T;
+        id?: T;
+      };
+  telefoon?:
+    | T
+    | {
+        zoekTekst?: T;
+        label?: T;
+        titel?: T;
+        tekst?: T;
+        knop?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerCtaBlock_select".
+ */
+export interface BannerCtaBlockSelect<T extends boolean = true> {
+  titel?: T;
+  tekst?: T;
+  actie?: T;
+  knopLabel?: T;
+  knopUrl?: T;
+  stijl?: T;
+  icoon?: T;
+  inschrijven?:
+    | T
+    | {
+        placeholder?: T;
+        knopLabel?: T;
+        formulier?: T;
+        bedankt?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqAccordeonBlock_select".
+ */
+export interface FaqAccordeonBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  bron?: T;
+  vragen?:
+    | T
+    | {
+        vraag?: T;
+        antwoord?: T;
+        id?: T;
+      };
+  categorie?: T;
+  maxAantal?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormulierSectieBlock_select".
+ */
+export interface FormulierSectieBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  locatieLabels?: T;
+  formulier?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WaardekaartBestellenBlock_select".
+ */
+export interface WaardekaartBestellenBlockSelect<T extends boolean = true> {
+  achtergrond?: T;
+  anker?: T;
+  titel?: T;
+  tekst?: T;
+  infoKaarten?:
+    | T
+    | {
+        titel?: T;
+        tekst?: T;
+        id?: T;
+      };
+  wizard?:
+    | T
+    | {
+        stap1?: T;
+        stap2?: T;
+        stap3?: T;
+        keuzeTitel?: T;
+        bedragen?: T;
+        standaardBedrag?: T;
+        aantalLabel?: T;
+        totaalLabel?: T;
+        volgendeLabel?: T;
+        gegevensTitel?: T;
+        terugLabel?: T;
+        bevestigLabel?: T;
+        succesTitel?: T;
+        succesTekst?: T;
+      };
+  formulier?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2450,6 +3645,14 @@ export interface LocationsSelect<T extends boolean = true> {
   reserveerbaar?: T;
   waardekaart?: T;
   strippenkaart?: T;
+  abonnementen?: T;
+  parkingPass?: T;
+  kaartLabels?:
+    | T
+    | {
+        tekst?: T;
+        id?: T;
+      };
   inrit?: T;
   uitrit?: T;
   route?: T;
@@ -2690,12 +3893,15 @@ export interface NieuwsSelect<T extends boolean = true> {
 export interface EvenementenSelect<T extends boolean = true> {
   naam?: T;
   slug?: T;
+  tagline?: T;
   soort?: T;
+  plaats?: T;
   kleur?: T;
   datums?: T;
   afbeelding?: T;
   vanafPrijs?: T;
   locaties?: T;
+  link?: T;
   publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2754,6 +3960,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              placeholder?: T;
               id?: T;
               blockName?: T;
             };
@@ -2812,6 +4019,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              placeholder?: T;
               id?: T;
               blockName?: T;
             };
@@ -2822,6 +4030,19 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               defaultValue?: T;
+              required?: T;
+              placeholder?: T;
+              id?: T;
+              blockName?: T;
+            };
+        locatieKeuze?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              placeholder?: T;
+              bron?: T;
               required?: T;
               id?: T;
               blockName?: T;
@@ -3002,6 +4223,16 @@ export interface Header {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Rechts in de header, bv. "085 4011647". Leeg = verbergen.
+   */
+  telefoon?: string | null;
+  /**
+   * Leeg = icoon verbergen.
+   */
+  accountUrl?: string | null;
+  knopLabel?: string | null;
+  knopUrl?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3011,6 +4242,28 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  tekst?: string | null;
+  kolommen?:
+    | {
+        titel: string;
+        links?:
+          | {
+              label: string;
+              url: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * {jaar} wordt het huidige jaar.
+   */
+  onderregelLinks?: string | null;
+  onderregelRechts?: string | null;
+  /**
+   * Alleen gebruikt zolang er geen linkkolommen zijn.
+   */
   navItems?:
     | {
         link: {
@@ -3053,6 +4306,10 @@ export interface HeaderSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  telefoon?: T;
+  accountUrl?: T;
+  knopLabel?: T;
+  knopUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -3062,6 +4319,22 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  tekst?: T;
+  kolommen?:
+    | T
+    | {
+        titel?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  onderregelLinks?: T;
+  onderregelRechts?: T;
   navItems?:
     | T
     | {

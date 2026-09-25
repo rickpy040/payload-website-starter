@@ -1,12 +1,23 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import React from 'react'
+
+import { CmsPagina, queryPageBySlug } from '@/components/CmsPagina'
+import { generateMeta } from '@/utilities/generateMeta'
 
 /**
- * docs/IA.md defines `/locaties` as "all 37, filterable, map view" — exactly
- * the job the existing /parkeren search-and-map page already does (built in
- * PR #2, before this rebuild). Rather than duplicate that page under a second
- * URL, `/locaties` redirects to it. `/parkeren/{stad}` remains the distinct,
- * per-city SEO page.
+ * `/locaties` is the prototype's "Vind je parking" overview, built as the CMS
+ * page with slug `locaties` (search hero + Locatie-overzicht block). Until
+ * that page exists, it keeps its old behaviour and redirects to the /parkeren
+ * search-and-map page.
  */
-export default function LocatiesPage() {
-  redirect('/parkeren')
+export default async function LocatiesPage() {
+  const page = await queryPageBySlug({ slug: 'locaties' })
+  if (!page) redirect('/parkeren')
+  return <CmsPagina page={page} url="/locaties" />
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await queryPageBySlug({ slug: 'locaties' })
+  return generateMeta({ doc: page })
 }

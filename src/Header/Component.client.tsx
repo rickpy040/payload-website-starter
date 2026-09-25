@@ -1,53 +1,109 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 import type { Header } from '@/payload-types'
 
-import { Logo } from '@/components/Logo/Logo'
-import { HeaderNav } from './Nav'
+import { Icon } from '@/components/py/Icon'
+import { PyButton } from '@/components/py/Button'
+import { PyLogo } from '@/components/py/Chrome'
+import { cmsLinkHref } from '@/utilities/cmsLinkHref'
 
 interface HeaderClientProps {
   data: Header
 }
 
+/** The prototype header (`PYHeader`): logo, menu, phone, account icon and the reserve button. */
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
-  /* Storing the value in a useState to avoid hydration errors */
-  const [theme, setTheme] = useState<string | null>(null)
-  const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    onScroll()
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  useEffect(() => {
-    if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headerTheme])
+  useEffect(() => setOpen(false), [pathname])
+
+  const items = (data?.navItems ?? [])
+    .map(({ link }) => ({
+      label: link?.label ?? '',
+      href: cmsLinkHref(link),
+      newTab: Boolean(link?.newTab),
+    }))
+    .filter((item): item is { label: string; href: string; newTab: boolean } =>
+      Boolean(item.href && item.label),
+    )
+
+  const knopLabel = data?.knopLabel || 'Direct reserveren'
+  const knopUrl = data?.knopUrl || '/parkeren'
+  const telefoon = data?.telefoon
+
+  const navLink = (item: (typeof items)[number], className?: string) => (
+    <Link
+      key={item.href}
+      href={item.href}
+      className={className}
+      {...(item.newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
+    >
+      {item.label}
+    </Link>
+  )
 
   return (
-    <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
-      <div className="py-8 flex items-center justify-between gap-6">
-        <Link href="/">
-          <Logo />
+    <header className={`py-scope py-header ${scrolled ? 'is-scrolled' : ''}`.trim()}>
+      <div className="py-container py-header__inner">
+        <Link href="/" className="py-header__brand" aria-label="ParkingYou home">
+          <PyLogo />
         </Link>
-        <div className="flex items-center gap-5">
-          <Link href="/parkeren" className="text-sm font-medium text-py-blauw">
-            Parkeren
-          </Link>
-          <HeaderNav data={data} />
-          <Link
-            href="/parkeren"
-            className="hidden min-h-[42px] items-center rounded-full bg-py-blauw px-5 text-sm font-bold text-white transition-colors hover:bg-py-blauw-ink sm:inline-flex"
-          >
-            Reserveer
-          </Link>
+        <nav className="py-header__nav" aria-label="Hoofdmenu">
+          {items.map((item) =>
+            navLink(
+              item,
+              pathname === item.href || pathname.startsWith(`${item.href}/`)
+                ? 'is-active'
+                : undefined,
+            ),
+          )}
+        </nav>
+        <div className="py-header__actions">
+          {telefoon ? (
+            <a className="py-header__phone" href={`tel:${telefoon.replace(/[^\d+]/g, '')}`}>
+              <Icon name="phone" size={16} />
+              <span>{telefoon}</span>
+            </a>
+          ) : null}
+          {data?.accountUrl ? (
+            <Link href={data.accountUrl} className="py-header__icon-btn" title="Mijn account">
+              <Icon name="user" size={20} />
+            </Link>
+          ) : null}
+          <PyButton href={knopUrl} variant="primary">
+            {knopLabel}
+          </PyButton>
         </div>
+        <button
+          type="button"
+          className="py-menu-button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label="Menu"
+        >
+          <Icon name={open ? 'x' : 'menu'} size={28} stroke={2.3} />
+        </button>
       </div>
+      {open ? (
+        <div className="py-mobile-nav">
+          {items.map((item) => navLink(item))}
+          <PyButton href={knopUrl} variant="primary">
+            {knopLabel}
+          </PyButton>
+        </div>
+      ) : null}
     </header>
   )
 }

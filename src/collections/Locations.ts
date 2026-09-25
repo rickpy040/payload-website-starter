@@ -245,6 +245,29 @@ export const Locations: CollectionConfig = {
     { name: 'waardekaart', type: 'checkbox', label: 'Waardekaart beschikbaar' },
     { name: 'strippenkaart', type: 'checkbox', label: 'Strippenkaart beschikbaar' },
     {
+      name: 'abonnementen',
+      type: 'checkbox',
+      label: 'Abonnementen mogelijk',
+      admin: { description: 'Toont deze locatie in een Locatie-overzicht met bron "Abonnementslocaties", zoals op /abonnementen.' },
+    },
+    {
+      name: 'parkingPass',
+      type: 'checkbox',
+      label: 'ParkingPass geldig',
+      admin: { description: 'Toont deze locatie bij de ParkingPass-locaties en in het ParkingPass-bestelformulier.' },
+    },
+    {
+      name: 'kaartLabels',
+      type: 'array',
+      label: 'Labels op de locatiekaart',
+      maxRows: 3,
+      admin: {
+        description:
+          'De kleine labels op de kaart in een Locatie-overzicht, bv. "Reserveerbaar", "24/7", "Events". Leeg = automatisch uit de velden hierboven.',
+      },
+      fields: [{ name: 'tekst', type: 'text', required: true }],
+    },
+    {
       name: 'inrit',
       type: 'richText',
       editor: lexicalEditor(),

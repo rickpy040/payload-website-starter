@@ -16,6 +16,7 @@ import { StappenPlan } from '@/blocks/StappenPlan/config'
 import { CijfersRij } from '@/blocks/CijfersRij/config'
 import { DoelgroepenBlok } from '@/blocks/DoelgroepenBlok/config'
 import { AppPromoBlok } from '@/blocks/AppPromoBlok/config'
+import { prototypeBlocks } from '@/blocks/py/registry'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -82,6 +83,7 @@ export const Pages: CollectionConfig<'pages'> = {
               name: 'layout',
               type: 'blocks',
               blocks: [
+                ...prototypeBlocks,
                 CallToAction,
                 Content,
                 MediaBlock,

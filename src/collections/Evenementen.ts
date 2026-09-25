@@ -25,7 +25,19 @@ export const Evenementen: CollectionConfig = {
   fields: [
     { name: 'naam', type: 'text', required: true, label: 'Naam' },
     { name: 'slug', type: 'text', required: true, unique: true, label: 'URL' },
+    {
+      name: 'tagline',
+      type: 'text',
+      label: 'Ondertitel',
+      admin: { description: 'Korte regel onder de naam op de evenementkaart, bv. "Officieel parkeerpartner van PSV".' },
+    },
     { name: 'soort', type: 'text', label: 'Soort', admin: { description: 'Bv. Festival of Sport' } },
+    {
+      name: 'plaats',
+      type: 'text',
+      label: 'Plaats',
+      admin: { description: 'Stad op de kaart en in het stadsfilter. Leeg = de stad van de eerste parkeerlocatie.' },
+    },
     {
       name: 'kleur',
       type: 'select',
@@ -47,6 +59,14 @@ export const Evenementen: CollectionConfig = {
       hasMany: true,
       required: true,
       label: 'Geschikte parkeerlocaties',
+    },
+    {
+      name: 'link',
+      type: 'text',
+      label: 'Link van de knop "Parkeerticket"',
+      admin: {
+        description: 'Bv. een campagnepagina (/evenementen/glow) of een externe ticketlink. Leeg = de pagina van de eerste parkeerlocatie.',
+      },
     },
     {
       name: 'publishedAt',

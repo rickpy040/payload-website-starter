@@ -1,0 +1,139 @@
+/*
+ * Styles for the prototype section blocks (src/blocks/py/registry.ts) that
+ * prototype.css does not already cover: states the prototype never had
+ * (empty lists, missing photos, send errors), and a few inline styles from
+ * the prototype JSX moved into classes. Loaded after prototype.css and
+ * py-extra.css.
+ */
+
+/* A CMS page built from prototype sections uses the prototype's section
+   rhythm, not the tighter 48px that py-extra.css sets for location pages. */
+.py-scope.py-pagina .py-section {
+  padding: 92px 0;
+}
+@media (max-width: 720px) {
+  .py-scope.py-pagina .py-section {
+    padding: 66px 0;
+  }
+}
+
+/* Browser heading and paragraph defaults, which the prototype relied on and
+   Tailwind's reset removes. In the base layer: they beat the reset, but every
+   (unlayered) prototype rule and every Tailwind utility still wins. */
+@layer base {
+  .py-pagina h1,
+  .py-pagina h2,
+  .py-pagina h3,
+  .py-pagina h4 {
+    font-weight: 700;
+  }
+  .py-pagina h2 {
+    font-size: 1.5em;
+    margin-block: 0.83em;
+  }
+  .py-pagina h3 {
+    font-size: 1.17em;
+    margin-block: 1em;
+  }
+  .py-pagina p {
+    margin-block: 1em;
+  }
+}
+
+/* The prototype's `.py-mini-map svg` and `.py-mini-map path` rules were meant
+   for the roads, but also hit the pin icons: each icon was stretched over its
+   pin and drawn with a 22px white stroke, hiding the city name. */
+.py-map-pin svg {
+  position: static;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+.py-map-pin path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+}
+
+/* Location/event cards and heroes without a photo */
+.py-image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 75% 25%, rgba(121, 202, 220, 0.45), transparent 45%),
+    linear-gradient(135deg, #dfe8f4 0%, #c9dbea 100%);
+}
+
+/* Header: keep "Over ons" on one line */
+.py-header__nav a {
+  white-space: nowrap;
+}
+
+/* Banner with e-mail sign-up (inline styles in the prototype) */
+.py-banner__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.py-banner__form input {
+  padding: 13px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  min-width: 240px;
+}
+.py-banner__form input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.py-banner__thanks {
+  margin: 0;
+  color: white;
+  font-weight: 700;
+}
+.py-banner .py-form-error {
+  flex-basis: 100%;
+  color: white;
+}
+
+/* Info cards under the waardekaart intro (inline styles in the prototype) */
+.py-info-bands--compact {
+  margin-top: 28px;
+}
+.py-info-bands--compact article {
+  padding: 20px 22px;
+}
+.py-info-bands--compact h3 {
+  margin-bottom: 6px;
+}
+.py-info-bands--compact p {
+  margin: 0;
+  color: var(--py-muted);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* Forms */
+.py-form-error {
+  margin: 0;
+  color: #b42318;
+  font-weight: 500;
+  font-size: 14px;
+}
+.py-contact-form .py-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+.py-contact-form .py-checkbox input {
+  width: auto;
+}
+.py-success-state .payload-richtext h2 {
+  margin: 20px 0 8px;
+}
+.py-success-state .payload-richtext p {
+  max-width: 340px;
+  margin: 0 auto 24px;
+}

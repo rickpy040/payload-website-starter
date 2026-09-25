@@ -7,14 +7,21 @@ import { SearchPanel } from '@/components/parkeren/SearchPanel'
 import { LocationCard } from '@/components/parkeren/LocationCard'
 import { Pin } from '@/components/parkeren/Brandmark'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { CmsPagina, queryPageBySlug } from '@/components/CmsPagina'
+import { generateMeta } from '@/utilities/generateMeta'
 
-export const metadata: Metadata = {
+const staticMetadata: Metadata = {
   title: 'parkingyou — voordelig parkeren zonder gedoe',
   description:
     'Reserveer vooraf een parkeerplek in 25+ Nederlandse steden. Vast laag tarief, gegarandeerde plek, naar binnen op kenteken.',
   openGraph: mergeOpenGraph({
     title: 'parkingyou — voordelig parkeren zonder gedoe',
   }),
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await queryPageBySlug({ slug: 'home' })
+  return page ? generateMeta({ doc: page }) : staticMetadata
 }
 
 const STEPS = [
@@ -38,7 +45,18 @@ const STEPS = [
 
 const POPULAR_CITIES = ['Amsterdam', 'Rotterdam', 'Eindhoven', 'Utrecht', 'Tilburg']
 
+/**
+ * The homepage is the CMS page with slug `home` (built from the prototype
+ * section blocks) once it exists; until then, the original static homepage
+ * below.
+ */
 export default async function HomePage() {
+  const page = await queryPageBySlug({ slug: 'home' })
+  if (page) return <CmsPagina page={page} url="/" />
+  return <StaticHomePage />
+}
+
+async function StaticHomePage() {
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
     collection: 'locations',

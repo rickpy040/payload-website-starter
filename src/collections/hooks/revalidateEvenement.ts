@@ -1,6 +1,6 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
-import { safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
+import { revalidateAllePaginas, safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
 
 import type { Evenementen as EvenementDoc, Location } from '../../payload-types'
 
@@ -12,10 +12,16 @@ function locatiePaths(doc: EvenementDoc): string[] {
 
 export const revalidateEvenement: CollectionAfterChangeHook<EvenementDoc> = ({
   doc,
+  previousDoc,
   req: { context },
 }) => {
   if (!context.disableRevalidate && doc._status === 'published') {
     for (const path of locatiePaths(doc)) revalidatePath(path)
+    // The Evenementen-overzicht and the hero collage can be on any page.
+    revalidateAllePaginas()
+  }
+  if (!context.disableRevalidate && previousDoc?._status === 'published' && doc._status !== 'published') {
+    revalidateAllePaginas()
   }
   return doc
 }
@@ -26,6 +32,7 @@ export const revalidateEvenementDelete: CollectionAfterDeleteHook<EvenementDoc> 
 }) => {
   if (!context.disableRevalidate) {
     for (const path of locatiePaths(doc)) revalidatePath(path)
+    revalidateAllePaginas()
   }
   return doc
 }

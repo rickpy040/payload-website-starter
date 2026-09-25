@@ -9,6 +9,8 @@ import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
+import { formVelden } from './formVelden'
+import { revalidateAllePaginas } from '@/utilities/safeRevalidatePath'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -55,10 +57,17 @@ export const plugins: Plugin[] = [
     generateURL,
   }),
   formBuilderPlugin({
-    fields: {
-      payment: false,
-    },
+    fields: formVelden,
     formOverrides: {
+      // A form's fields and texts are rendered into the (static) page that shows it.
+      hooks: {
+        afterChange: [
+          ({ doc, req: { context } }) => {
+            if (!context.disableRevalidate) revalidateAllePaginas()
+            return doc
+          },
+        ],
+      },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           if ('name' in field && field.name === 'confirmationMessage') {
