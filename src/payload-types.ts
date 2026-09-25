@@ -1369,6 +1369,9 @@ export interface LocatieFaciliteitenBlock {
  * via the `definition` "LocatieOpeningstijdenBlock".
  */
 export interface LocatieOpeningstijdenBlock {
+  /**
+   * Kop boven de openingstijden, die naast de tarieven staan.
+   */
   titel?: string | null;
   telefoon?: string | null;
   id?: string | null;

@@ -1,12 +1,22 @@
 import type { Block } from 'payload'
 
-/** Openingstijden plus service & bereikbaarheid, read from the location document. */
+/**
+ * Betaalmogelijkheden plus service & bereikbaarheid, read from the location
+ * document. The opening hours themselves sit beside the tarieven; `titel` is
+ * still their heading. The slug keeps its old name so stored pages stay valid.
+ */
 export const LocatieOpeningstijden: Block = {
   slug: 'locatieOpeningstijden',
   interfaceName: 'LocatieOpeningstijdenBlock',
-  labels: { singular: 'Openingstijden en service', plural: 'Openingstijdensecties' },
+  labels: { singular: 'Betaalmogelijkheden en service', plural: 'Betaal- en servicesecties' },
   fields: [
-    { name: 'titel', type: 'text', label: 'Titel', defaultValue: 'Openingstijden' },
+    {
+      name: 'titel',
+      type: 'text',
+      label: 'Titel openingstijden',
+      defaultValue: 'Openingstijden',
+      admin: { description: 'Kop boven de openingstijden, die naast de tarieven staan.' },
+    },
     {
       name: 'telefoon',
       type: 'text',

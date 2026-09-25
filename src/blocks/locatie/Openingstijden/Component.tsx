@@ -6,49 +6,39 @@ import { PyButton } from '@/components/py/Button'
 
 type Props = LocatieOpeningstijdenBlock & { locatie: Location }
 
-export const LocatieOpeningstijdenComponent: React.FC<Props> = ({ titel, telefoon, locatie }) => {
-  const uren = locatie.uren
+/**
+ * Payment methods above service & bereikbaarheid. The opening hours this
+ * block is named after are shown beside the tarieven; its `titel` is the
+ * heading there (see the Tarieven component).
+ */
+export const LocatieOpeningstijdenComponent: React.FC<Props> = ({ telefoon, locatie }) => {
+  const betaalmogelijkheden = locatie.betaalmogelijkheden ?? []
   const adres = locatie.address
 
   return (
-    <section className="py-info-section" id="openingstijden">
-      <div className="py-container py-detail-two-col">
+    <section className="py-info-section" id="betaalmogelijkheden">
+      <div className="py-container py-detail-stack">
         <div>
-          <h3>{titel}</h3>
-          {uren?.open247 ? (
-            <div className="py-247-badge">
-              <Icon name="check" size={20} />
-              <div>
-                <strong>24/7 geopend</strong>
-                <p>Deze locatie is altijd toegankelijk, ook op feestdagen.</p>
-              </div>
+          <h3>Betaalmogelijkheden</h3>
+          {betaalmogelijkheden.length > 0 ? (
+            <div className="py-payment-grid">
+              {betaalmogelijkheden.map((m, i) => (
+                <span key={i} className="py-payment-badge">
+                  <Icon name="card" size={16} />
+                  {m.tekst}
+                </span>
+              ))}
             </div>
-          ) : (
-            <table className="py-hours-table">
-              <tbody>
-                <tr>
-                  <td>Maandag – Vrijdag</td>
-                  <td>
-                    <strong>{uren?.doordeweeks ?? 'Onbekend'}</strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Zaterdag</td>
-                  <td>
-                    <strong>{uren?.zaterdag ?? 'Onbekend'}</strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Zondag</td>
-                  <td>
-                    <strong>{uren?.zondag ?? 'Onbekend'}</strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          )}
+          ) : null}
+          <div className="py-pricing-tip">
+            <Icon name="trending" size={18} color="var(--py-orange)" />
+            <div>
+              <strong>Bespaar tot 33%</strong>
+              <p>Reserveer vooraf en profiteer van vroegboekkortingen en gereserveerde dagprijzen.</p>
+            </div>
+          </div>
         </div>
-        <div>
+        <div id="service">
           <h3>Service &amp; bereikbaarheid</h3>
           <div className="py-access-info">
             <div>

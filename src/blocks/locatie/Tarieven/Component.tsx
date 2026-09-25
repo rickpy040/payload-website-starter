@@ -1,14 +1,23 @@
 import React from 'react'
 
-import type { LocatieTarievenBlock, Location } from '@/payload-types'
+import type { LocatieOpeningstijdenBlock, LocatieTarievenBlock, Location } from '@/payload-types'
 import { Icon } from '@/components/py/Icon'
 
 type Props = LocatieTarievenBlock & { locatie: Location }
 
+/**
+ * Tarieven with the opening hours beside them. The hours heading stays
+ * editable in the Openingstijden block (which now holds payment methods and
+ * service), so it is read from that sibling block when the location has one.
+ */
 export const LocatieTarievenComponent: React.FC<Props> = ({ titel, locatie }) => {
   const tarieven = locatie.aeroparkerSync?.tarieven ?? []
-  const betaalmogelijkheden = locatie.betaalmogelijkheden ?? []
   const sync = locatie.aeroparkerSync
+  const uren = locatie.uren
+  const urenTitel =
+    locatie.secties?.find(
+      (b): b is LocatieOpeningstijdenBlock => b.blockType === 'locatieOpeningstijden',
+    )?.titel || 'Openingstijden'
 
   return (
     <section className="py-info-section" id="tarieven">
@@ -40,25 +49,40 @@ export const LocatieTarievenComponent: React.FC<Props> = ({ titel, locatie }) =>
             </p>
           ) : null}
         </div>
-        <div>
-          <h3>Betaalmogelijkheden</h3>
-          {betaalmogelijkheden.length > 0 ? (
-            <div className="py-payment-grid">
-              {betaalmogelijkheden.map((m, i) => (
-                <span key={i} className="py-payment-badge">
-                  <Icon name="card" size={16} />
-                  {m.tekst}
-                </span>
-              ))}
+        <div id="openingstijden">
+          <h3>{urenTitel}</h3>
+          {uren?.open247 ? (
+            <div className="py-247-badge">
+              <Icon name="check" size={20} />
+              <div>
+                <strong>24/7 geopend</strong>
+                <p>Deze locatie is altijd toegankelijk, ook op feestdagen.</p>
+              </div>
             </div>
-          ) : null}
-          <div className="py-pricing-tip">
-            <Icon name="trending" size={18} color="var(--py-orange)" />
-            <div>
-              <strong>Bespaar tot 33%</strong>
-              <p>Reserveer vooraf en profiteer van vroegboekkortingen en gereserveerde dagprijzen.</p>
-            </div>
-          </div>
+          ) : (
+            <table className="py-hours-table">
+              <tbody>
+                <tr>
+                  <td>Maandag – Vrijdag</td>
+                  <td>
+                    <strong>{uren?.doordeweeks ?? 'Onbekend'}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Zaterdag</td>
+                  <td>
+                    <strong>{uren?.zaterdag ?? 'Onbekend'}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Zondag</td>
+                  <td>
+                    <strong>{uren?.zondag ?? 'Onbekend'}</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </section>
