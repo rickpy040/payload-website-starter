@@ -7,8 +7,9 @@
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs",
-    "ci": "payload migrate && pnpm build",
+    "ci": "payload migrate && pnpm fotos && pnpm build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "fotos": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/fotos-bijwerken.ts",
     "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
