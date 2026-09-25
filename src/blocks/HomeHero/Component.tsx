@@ -5,7 +5,7 @@ import type { HomeHeroBlock } from '@/payload-types'
 import { Icon } from '@/components/py/Icon'
 import { PyPriceBlob } from '@/components/py/Chrome'
 import { Nadruk, PyImage, isMedia } from '@/blocks/py/ui'
-import { ZoekPaneel } from '@/blocks/py/ZoekPaneel.client'
+import { ZoekBalk } from '@/blocks/py/ZoekBalk'
 
 export const HomeHeroComponent: React.FC<HomeHeroBlock> = ({
   titel,
@@ -32,7 +32,7 @@ export const HomeHeroComponent: React.FC<HomeHeroBlock> = ({
             <Nadruk tekst={titel} />
           </h1>
           {tekst ? <p>{tekst}</p> : null}
-          <ZoekPaneel zoekbalk={zoekbalk} />
+          <ZoekBalk zoekbalk={zoekbalk} />
           {snelleSteden?.length ? (
             <div className="py-quick-cities" aria-label="Populaire steden">
               {snelleSteden.map((stad, i) => (

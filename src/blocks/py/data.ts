@@ -5,6 +5,7 @@ import { getPayload, type Where } from 'payload'
 import type { Evenementen, Location, Media, Steden } from '@/payload-types'
 import { Locations } from '@/collections/Locations'
 import { locationHref } from '@/utilities/locationHref'
+import type { ZoekStad } from './zoekSuggesties'
 
 /**
  * Data access for the prototype section blocks. Published documents only,
@@ -137,6 +138,35 @@ export async function haalLocaties({
     return [...result.docs].sort((a, b) => volgorde.indexOf(a.id) - volgorde.indexOf(b.id))
   }
   return result.docs
+}
+
+/**
+ * Every city that has a location, each with its locations, for the search
+ * panel's "Waar" suggestions. A failed lookup returns no suggestions rather
+ * than breaking the hero the panel sits in.
+ */
+export async function haalZoekSuggesties(): Promise<ZoekStad[]> {
+  let locaties: Location[]
+  try {
+    locaties = await haalLocaties({})
+  } catch {
+    return []
+  }
+  const perStad = new Map<string, ZoekStad>()
+  for (const kaart of locaties.map(naarLocatieKaart)) {
+    if (!kaart.stad) continue
+    const stad = perStad.get(kaart.stad) ?? { naam: kaart.stad, locaties: [] }
+    stad.locaties.push({
+      id: kaart.id,
+      naam: kaart.naam,
+      adres: kaart.adres,
+      href: kaart.href,
+      prijs: kaart.prijs,
+      prijsEenheid: kaart.prijsEenheid,
+    })
+    perStad.set(kaart.stad, stad)
+  }
+  return [...perStad.values()].sort((a, b) => a.naam.localeCompare(b.naam, 'nl'))
 }
 
 export type EvenementKaart = {

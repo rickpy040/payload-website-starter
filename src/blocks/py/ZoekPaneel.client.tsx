@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { Icon } from '@/components/py/Icon'
 import { PyButton } from '@/components/py/Button'
+import { WaarVeld } from './WaarVeld.client'
+import type { ZoekStad } from './zoekSuggesties'
 
 /** Fired when a search panel submits to the page it is on; LocatieOverzicht listens. */
 export const ZOEK_EVENT = 'py:zoek'
@@ -30,9 +32,12 @@ const stadOpServer = () => ''
 export function ZoekPaneel({
   zoekbalk,
   compact = false,
+  steden = [],
 }: {
   zoekbalk?: ZoekbalkData | null
   compact?: boolean
+  /** Suggestions for the "Waar" field; see `ZoekBalk`. */
+  steden?: ZoekStad[]
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -45,9 +50,8 @@ export function ZoekPaneel({
   const [wanneer, setWanneer] = useState(zoekbalk?.wanneerWaarde ?? 'Vandaag 09:00 - 17:00')
   const [gezocht, setGezocht] = useState<string | null>(null)
 
-  const zoek = (event: React.FormEvent) => {
-    event.preventDefault()
-    const waarde = stad.trim()
+  const zoekOp = (invoer: string) => {
+    const waarde = invoer.trim()
     setGezocht(waarde)
     const query = waarde ? `?stad=${encodeURIComponent(waarde)}` : ''
     if (window.location.pathname === doel) {
@@ -58,6 +62,11 @@ export function ZoekPaneel({
     }
   }
 
+  const zoek = (event: React.FormEvent) => {
+    event.preventDefault()
+    zoekOp(stad)
+  }
+
   const hint = (zoekbalk?.hint ?? 'We tonen nu de beste matches voor {stad}.').replace(
     '{stad}',
     gezocht || 'alle steden',
@@ -65,16 +74,21 @@ export function ZoekPaneel({
 
   return (
     <form className={`py-search ${compact ? 'py-search--compact' : ''}`.trim()} onSubmit={zoek}>
-      <label>
-        <span>
-          <Icon name="pin" size={18} /> {zoekbalk?.waarLabel ?? 'Waar'}
-        </span>
-        <input
-          value={stad}
-          onChange={(e) => setInvoer(e.target.value)}
-          placeholder={zoekbalk?.waarPlaceholder ?? 'Stad, garage of adres'}
-        />
-      </label>
+      <WaarVeld
+        label={zoekbalk?.waarLabel ?? 'Waar'}
+        placeholder={zoekbalk?.waarPlaceholder ?? 'Stad, garage of adres'}
+        waarde={stad}
+        onWaarde={setInvoer}
+        steden={steden}
+        onKiesStad={(gekozen) => {
+          setInvoer(gekozen.naam)
+          zoekOp(gekozen.naam)
+        }}
+        onKiesLocatie={(locatie) => {
+          setInvoer(locatie.naam)
+          router.push(locatie.href)
+        }}
+      />
       <label>
         <span>
           <Icon name="calendar" size={18} /> {zoekbalk?.wanneerLabel ?? 'Wanneer'}

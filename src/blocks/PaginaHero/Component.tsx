@@ -3,7 +3,7 @@ import React from 'react'
 import type { PaginaHeroBlock } from '@/payload-types'
 import { Icon } from '@/components/py/Icon'
 import { KnoppenRij, Nadruk, PyImage, isMedia } from '@/blocks/py/ui'
-import { ZoekPaneel } from '@/blocks/py/ZoekPaneel.client'
+import { ZoekBalk } from '@/blocks/py/ZoekBalk'
 import { MiniKaart, type KaartPin } from '@/blocks/py/MiniKaart'
 import {
   haalEvenementen,
@@ -137,7 +137,7 @@ export const PaginaHeroComponent: React.FC<PaginaHeroBlock> = (block) => {
             <Nadruk tekst={titel} />
           </h1>
           {tekst ? <p>{tekst}</p> : null}
-          {toonZoekbalk ? <ZoekPaneel compact zoekbalk={zoekbalk} /> : null}
+          {toonZoekbalk ? <ZoekBalk compact zoekbalk={zoekbalk} /> : null}
           <KnoppenRij knoppen={knoppen} />
         </div>
         <Visual block={block} />

@@ -10,6 +10,7 @@ import * as migration_20260924_234319_prototype_section_blocks from './20260924_
 import * as migration_20260924_234500_seed_prototype_paginas from './20260924_234500_seed_prototype_paginas';
 import * as migration_20260925_003153_restore_media_objectkey from './20260925_003153_restore_media_objectkey';
 import * as migration_20260925_003300_herstel_prototype_fotos from './20260925_003300_herstel_prototype_fotos';
+import * as migration_20260925_193000_parkingyou_fotos from './20260925_193000_parkingyou_fotos';
 
 export const migrations = [
   {
@@ -71,5 +72,10 @@ export const migrations = [
     up: migration_20260925_003300_herstel_prototype_fotos.up,
     down: migration_20260925_003300_herstel_prototype_fotos.down,
     name: '20260925_003300_herstel_prototype_fotos',
+  },
+  {
+    up: migration_20260925_193000_parkingyou_fotos.up,
+    down: migration_20260925_193000_parkingyou_fotos.down,
+    name: '20260925_193000_parkingyou_fotos',
   },
 ];

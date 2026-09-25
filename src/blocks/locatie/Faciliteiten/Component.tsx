@@ -21,7 +21,7 @@ export const LocatieFaciliteitenComponent: React.FC<Props> = ({ titel, locatie }
 
   return (
     <section className="py-info-section" id="faciliteiten">
-      <div className="py-container py-detail-two-col">
+      <div className="py-container py-detail-stack">
         <div>
           <h3>{titel}</h3>
           {faciliteiten.length > 0 ? (
@@ -37,7 +37,7 @@ export const LocatieFaciliteitenComponent: React.FC<Props> = ({ titel, locatie }
             </div>
           ) : null}
         </div>
-        <div>
+        <div id="toegang">
           <h3>Toegang &amp; type</h3>
           <div className="py-access-info">
             <div>

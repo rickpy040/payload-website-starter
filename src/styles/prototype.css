@@ -1463,6 +1463,10 @@
   align-items: start;
 }
 .py-detail-two-col h3 { margin: 0 0 18px; font-size: 22px; }
+/* Two parts of one section stacked, each at the full width of the column. */
+.py-detail-stack { display: grid; gap: 40px; }
+.py-detail-stack h3 { margin: 0 0 18px; font-size: 22px; }
+.py-detail-stack .py-facility-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 
 /* Tariff table */
 .py-tariff-table { width: 100%; border-collapse: collapse; }
@@ -2633,6 +2637,7 @@ i.py-avail-dot { display: inline-block; }
   .py-wizard-layout { grid-template-columns: 1fr; }
   .py-wizard-sidebar { order: -1; }
   .py-detail-two-col { grid-template-columns: 1fr; gap: 28px; }
+  .py-detail-stack { gap: 28px; }
   .py-poi-grid { grid-template-columns: repeat(2, 1fr); }
   .py-event-grid { grid-template-columns: repeat(2, 1fr); }
   .py-event-hero__grid { grid-template-columns: 1fr; }
