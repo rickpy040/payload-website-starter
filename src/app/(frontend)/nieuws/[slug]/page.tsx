@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import configPromise from '@payload-config'
@@ -40,7 +41,7 @@ export default async function NieuwsArtikelPage({ params }: Args) {
     <div className="py-scope">
       <div className="py-container" style={{ paddingTop: 24, paddingBottom: 48, maxWidth: 760 }}>
         <p className="py-back-link">
-          <a href="/nieuws">← Nieuws</a>
+          <Link href="/nieuws">← Nieuws</Link>
         </p>
         <h1>{artikel.titel}</h1>
         <p className="py-lead">{artikel.samenvatting}</p>
