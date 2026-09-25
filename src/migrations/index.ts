@@ -8,6 +8,8 @@ import * as migration_20260924_220544_import_locaties_csv from './20260924_22054
 import * as migration_20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo from './20260924_230032_add_kaartenslider_stappenplan_cijfers_doelgroepen_apppromo';
 import * as migration_20260924_234319_prototype_section_blocks from './20260924_234319_prototype_section_blocks';
 import * as migration_20260924_234500_seed_prototype_paginas from './20260924_234500_seed_prototype_paginas';
+import * as migration_20260925_003153_restore_media_objectkey from './20260925_003153_restore_media_objectkey';
+import * as migration_20260925_003300_herstel_prototype_fotos from './20260925_003300_herstel_prototype_fotos';
 
 export const migrations = [
   {
@@ -59,5 +61,15 @@ export const migrations = [
     up: migration_20260924_234500_seed_prototype_paginas.up,
     down: migration_20260924_234500_seed_prototype_paginas.down,
     name: '20260924_234500_seed_prototype_paginas',
+  },
+  {
+    up: migration_20260925_003153_restore_media_objectkey.up,
+    down: migration_20260925_003153_restore_media_objectkey.down,
+    name: '20260925_003153_restore_media_objectkey',
+  },
+  {
+    up: migration_20260925_003300_herstel_prototype_fotos.up,
+    down: migration_20260925_003300_herstel_prototype_fotos.down,
+    name: '20260925_003300_herstel_prototype_fotos',
   },
 ];

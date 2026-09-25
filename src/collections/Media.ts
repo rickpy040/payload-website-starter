@@ -29,6 +29,16 @@ export const Media: CollectionConfig = {
       type: 'text',
       //required: true,
     },
+    // The Vercel Blob plugin adds this field (the file's key in the blob store),
+    // but only when BLOB_READ_WRITE_TOKEN is set. Declared here so the schema is
+    // the same with and without a token: the plugin replaces it with its own,
+    // and a migration generated locally no longer drops the column production
+    // needs (that is what 20260924_190424 did).
+    {
+      name: '_objectKey',
+      type: 'text',
+      admin: { hidden: true, readOnly: true },
+    },
     {
       name: 'caption',
       type: 'richText',
