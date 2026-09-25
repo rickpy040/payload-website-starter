@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./Icon";
 
-export type ButtonVariant = "primary" | "aqua" | "outline" | "ghost";
+export type ButtonVariant = "primary" | "aqua" | "outline" | "ghost" | "on-dark";
 
 interface CommonProps {
   readonly children: ReactNode;

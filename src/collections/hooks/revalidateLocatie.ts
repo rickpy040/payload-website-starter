@@ -1,6 +1,6 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
-import { safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
+import { revalidateAllePaginas, safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
 
 import type { Location } from '../../payload-types'
 
@@ -13,7 +13,8 @@ function pathFor(doc: Pick<Location, 'slug' | 'city' | 'stad'>): string {
  * Publishing a location revalidates its own path, its city page, `/locaties`
  * and the general `/parkeren` search, per docs/CONTENT-MODEL.md's revalidation
  * table. POI pages that reference it are left for a later pass rather than
- * queried on every save.
+ * queried on every save. CMS pages with a Locatie-overzicht (Abonnementen,
+ * ParkingPass, …) are marked stale as a whole, see revalidateAllePaginas.
  */
 export const revalidateLocatie: CollectionAfterChangeHook<Location> = ({
   doc,
@@ -28,11 +29,13 @@ export const revalidateLocatie: CollectionAfterChangeHook<Location> = ({
       revalidatePath('/locaties')
       revalidatePath('/parkeren')
       revalidatePath('/')
+      revalidateAllePaginas()
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
       revalidatePath(pathFor(previousDoc))
       revalidatePath('/locaties')
+      revalidateAllePaginas()
     }
   }
   return doc
@@ -45,6 +48,7 @@ export const revalidateLocatieDelete: CollectionAfterDeleteHook<Location> = ({
   if (!context.disableRevalidate) {
     revalidatePath(pathFor(doc))
     revalidatePath('/locaties')
+    revalidateAllePaginas()
   }
   return doc
 }

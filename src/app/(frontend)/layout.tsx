@@ -16,6 +16,7 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import '@/styles/prototype.css'
 import '@/styles/py-extra.css'
+import '@/styles/py-blocks.css'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const ubuntu = Ubuntu({

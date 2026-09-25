@@ -1,6 +1,6 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
-import { safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
+import { revalidateAllePaginas, safeRevalidatePath as revalidatePath } from '../../utilities/safeRevalidatePath'
 
 import type { Steden as StedenDoc } from '../../payload-types'
 
@@ -22,6 +22,8 @@ export const revalidateStad: CollectionAfterChangeHook<StedenDoc> = ({
       revalidatePath(`/parkeren/${doc.slug}`)
       revalidatePath('/locaties')
       revalidatePath('/parkeren')
+      // City names show in the Stedenbalk and the city filters on any page.
+      revalidateAllePaginas()
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
