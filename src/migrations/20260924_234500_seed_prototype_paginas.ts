@@ -68,7 +68,7 @@ async function findOne(
 
 // --- Photos ------------------------------------------------------------------
 
-const FOTOS = {
+export const FOTOS = {
   parkeerterrein: {
     url: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1600&q=80',
     alt: "Auto's op een parkeerterrein, van bovenaf",
